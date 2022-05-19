@@ -13,8 +13,42 @@ module.exports = {
     .setDescription('The base command for all things Trust system.')
     .addSubcommand(subcommand =>
       subcommand
-        .setName('servertoggle')
-        .setDescription('Toggles the Trust system for the server off/on, depending of the previous state. (Default: off)'
+        .setName('server')
+        .setDescription('Changes the servers settings for the trust system.')
+        .addBooleanOption(option =>
+          option
+            .setName('enabled')
+            .setDescription('Wether or not the trust system is active for this server. (Default: false)')
+        )
+        .addNumberOption(option =>
+          option
+            .setName('message-karma')
+            .setDescription('The amount of karma a user gains per message sent. (Default: 1)')
+        )
+        .addNumberOption(option =>
+          option
+            .setName('voice-minute-karma')
+            .setDescription('The amount of karma a user gains per minute spent in a voice channel (Default: 5)')
+        )
+        .addNumberOption(option =>
+          option
+            .setName('message-deleted-karma')
+            .setDescription('The amount of karma a user gains per message deleted by a mod. (Default: -2)')
+        )
+        .addNumberOption(option =>
+          option
+            .setName('time-out-karma')
+            .setDescription('The amount of karma a user gains per day of time-out. (Default: -25)')
+        )
+        .addNumberOption(option =>
+          option
+            .setName('kick-karma')
+            .setDescription('The amount of karma a user gains per kick from the server. (Default: -100)')
+        )
+        .addNumberOption(option =>
+          option
+            .setName('ban-karma')
+            .setDescription('The amount of karma a user gains per ban from the server. (Default: -1000)')
         )
     )
     .addSubcommand(subcommand =>
@@ -95,21 +129,48 @@ module.exports = {
     if (blockedUsers.includes(interaction.user.id)) return
 
     try {
-      if (interaction.options.getSubcommand() === 'servertoggle') {
+      if (interaction.options.getSubcommand() === 'server') {
         if (!interaction.memberPermissions.any(Permissions.FLAGS.MANAGE_GUILD)) return interaction.reply({ content: '⛔ You need the "Manage Server" permission to do this!', ephemeral: true })
-        const guildTrust = await TrustGuildData.findOne({ where: { guildid: interaction.guildId } })
-        if (guildTrust.guild_enabled === 1) {
-          TrustGuildData.update({ guild_enabled: 0 }, { where: { guildid: interaction.guildId } })
-          await interaction.reply('✅ Toggled trust system off.')
-          return console.log(`Deactivated trust system for ${interaction.guildId}.`)
-        } else if (guildTrust.guild_enabled === 0) {
-          TrustGuildData.update({ guild_enabled: 1 }, { where: { guildid: interaction.guildId } })
-          await interaction.reply('✅ Toggled trust system on.')
-          return console.log(`Activated trust system for ${interaction.guildId}.`)
-        } else {
-          await interaction.reply('❗ Something went wrong, when trying to toggle the trust system!')
-          return console.error(`Something went wrong, when trying to toggle the trust system for ${interaction.guildId}.`)
+        await interaction.deferReply()
+        let guildTrust = await TrustGuildData.findOne({ where: { guildid: interaction.guildId } })
+        let editedServer = false
+        const serverEnabled = interaction.options.getBoolean('enabled')
+        const serverKarmaMsg = interaction.options.getNumber('message-karma')
+        const serverKarmaVCMin = interaction.options.getNumber('voice-minute-karma')
+        const serverKarmaDel = interaction.options.getNumber('message-deleted-karma')
+        const serverKarmaTo = interaction.options.getNumber('time-out-karma')
+        const serverKarmaKick = interaction.options.getNumber('kick-karma')
+        const serverKarmaBan = interaction.options.getNumber('ban-karma')
+        if ([serverEnabled, serverKarmaMsg, serverKarmaVCMin, serverKarmaDel, serverKarmaTo, serverKarmaKick, serverKarmaDel].some(item => item !== null)) {
+          await TrustGuildData.update(
+            {
+              guild_enabled: serverEnabled !== null ? serverEnabled : guildTrust.guild_enabled,
+              karma_message: serverKarmaMsg !== null ? serverKarmaMsg : guildTrust.karma_message,
+              karma_vcminute: serverKarmaVCMin !== null ? serverKarmaVCMin : guildTrust.karma_vcminute,
+              karma_message_del: serverKarmaDel !== null ? serverKarmaDel : guildTrust.karma_message_del,
+              karma_time_out: serverKarmaTo !== null ? serverKarmaTo : guildTrust.karma_time_out,
+              karma_kick: serverKarmaKick !== null ? serverKarmaKick : guildTrust.karma_kick,
+              karma_ban: serverKarmaBan !== null ? serverKarmaBan : guildTrust.karma_ban
+            },
+            { where: { guildid: interaction.guildId } }
+          )
+          guildTrust = await TrustGuildData.findOne({ where: { guildid: interaction.guildId } })
+          editedServer = true
         }
+        let serverCmdResponse = ''
+        if (editedServer) {
+          serverCmdResponse = `✅ Successfully edited server settings for the Trust-System. The new settings are:\nEnabled: ${!!guildTrust.guild_enabled}\nKarma per message: ${guildTrust.karma_message}
+Karma per minute in a voice channel: ${guildTrust.karma_vcminute}\nKarma per message deleted by a moderator: ${guildTrust.karma_message_del}\nKarma per day in time-out: ${guildTrust.karma_time_out}
+Karma per kick: ${guildTrust.karma_kick}\nKarma per ban: ${guildTrust.karma_ban}`
+        } else {
+          serverCmdResponse = {
+            content: `The server settings are:\nEnabled: ${!!guildTrust.guild_enabled}\nKarma per message: ${guildTrust.karma_message}\nKarma per minute in a voice channel: ${guildTrust.karma_vcminute}
+Karma per message deleted by a moderator: ${guildTrust.karma_message_del}\nKarma per day in time-out: ${guildTrust.karma_time_out}\nKarma per kick: ${guildTrust.karma_kick}
+Karma per ban: ${guildTrust.karma_ban}`,
+            ephemeral: true
+          }
+        }
+        interaction.editReply(serverCmdResponse)
       }
 
       if (interaction.options.getSubcommand() === 'usertoggle') {

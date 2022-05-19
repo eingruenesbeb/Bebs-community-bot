@@ -108,10 +108,12 @@ module.exports = {
         console.log(`Added ${guildUser} to the trust database.`)
       }
 
+      const timeOutLenght = Math.floor((newMember.communicationDisabledUntilTimestamp - oldMember.communicationDisabledUntilTimestamp) / 8640000) // Time-Out lenght in days (rounded down to the next integer)
+
       if (guildUser.user_enabled === 1) {
         await TrustUserData.update({ karma: guildUser.karma + guildTrust.karma_time_out }, { where: { guild_user_id: newMember.guild.id + '|' + newMember.id } })
-        TrustRolesHelper.apply(newMember, guildUser.karma + guildTrust.karma_time_out)
-        console.log(`The karma for ${newMember.user.tag} in ${newMember.guild.name} is now ${guildUser.karma + guildTrust.karma_time_out}. Reason: User was given a time-out.`)
+        TrustRolesHelper.apply(newMember, guildUser.karma + guildTrust.karma_time_out + guildTrust.karma_time_out * timeOutLenght)
+        console.log(`The karma for ${newMember.user.tag} in ${newMember.guild.name} is now ${guildUser.karma + guildTrust.karma_time_out + guildTrust.karma_time_out * timeOutLenght}. Reason: User was given a time-out for ${timeOutLenght} days.`)
       }
     }
   },
