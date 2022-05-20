@@ -4,7 +4,7 @@ module.exports = {
   name: 'voiceStateUpdate',
   once: false,
   async execute (oldState, newState) {
-    const blockedUsers = ['962154925255708683']
+    const blockedUsers = ['962154925255708683', '976987486289018880']
     if (blockedUsers.includes(newState.member.id)) return
     console.log(`The voice state of ${newState.member.user.tag} in ${newState.guild.name} changed.`)
     console.log(`Channel: ${oldState.channel} -> ${newState.channel}`)

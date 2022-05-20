@@ -2,7 +2,7 @@ module.exports = {
   name: 'interactionCreate',
   once: false,
   async execute (interaction) {
-    const blockedUsers = ['962154925255708683']
+    const blockedUsers = ['962154925255708683', '976987486289018880']
     if (blockedUsers.includes(interaction.user.id)) return
     if (interaction.isButton()) {
       console.log('Jemand hat einen Knopf gedrückt.')

@@ -162,6 +162,7 @@ module.exports = {
           serverCmdResponse = `✅ Successfully edited server settings for the Trust-System. The new settings are:\nEnabled: ${!!guildTrust.guild_enabled}\nKarma per message: ${guildTrust.karma_message}
 Karma per minute in a voice channel: ${guildTrust.karma_vcminute}\nKarma per message deleted by a moderator: ${guildTrust.karma_message_del}\nKarma per day in time-out: ${guildTrust.karma_time_out}
 Karma per kick: ${guildTrust.karma_kick}\nKarma per ban: ${guildTrust.karma_ban}`
+          interaction.editReply(serverCmdResponse)
         } else {
           serverCmdResponse = {
             content: `The server settings are:\nEnabled: ${!!guildTrust.guild_enabled}\nKarma per message: ${guildTrust.karma_message}\nKarma per minute in a voice channel: ${guildTrust.karma_vcminute}
@@ -169,8 +170,9 @@ Karma per message deleted by a moderator: ${guildTrust.karma_message_del}\nKarma
 Karma per ban: ${guildTrust.karma_ban}`,
             ephemeral: true
           }
+          interaction.followUp(serverCmdResponse)
+          interaction.deleteReply()
         }
-        interaction.editReply(serverCmdResponse)
       }
 
       if (interaction.options.getSubcommand() === 'usertoggle') {
