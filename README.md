@@ -51,7 +51,7 @@ These are the packages you actually have to download. If you want a full list of
         - Application-/Guild-commands:
             - `/trust server`: Is a guild command to use for setting server preferences, such as if it is enabled and the different amounts of karma per action. If all options are omitted, just an info about the current settings is sent.
             - `/trust edit`: Used to manually change the amount of karma a user has.
-            - `/trust usertoggle`: Changes, wether or not the trust system applies to a certain user.
+            - `/trust usertoggle`: Changes, whether or not the trust system applies to a certain user.
             - `/trust role`: Let's you set up or edit a role to be automatically mangaged via the trust system. Check the option descriptions for details. If all options are ommited and the role is already managed by the system, a query will be sent asking the user, if he either wants to view how the role is set up or removed from the system.
             - `/trust show`: Let's you see, how much karma a user has. If no additional argument is given, the command returns the amount, the issuer has.
     - Additional Commands: 

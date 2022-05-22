@@ -5,6 +5,10 @@ module.exports = {
   data: new SlashCommandBuilder()
     .setName('ping')
     .setDescription('Answeres Pong and tells the user, how long that took'),
+  /**
+  * Executed, when "ping" shlash command was issued. Answers with the amount of time needed for a response.
+  * @param {CommandInteraction} interaction - Contains information about the command issued and the means to respond appropiatly.
+  */
   async execute (interaction) {
     // Block Bots, from using this command
     if (interaction.user.bot) return

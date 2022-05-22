@@ -3,8 +3,16 @@ const data = require('../database-setup')
 
 const TrustRoleData = data.TrustRoleData
 
+/**
+* Used to keep track, of who is in a voice channel.
+*/
 class TrustVoiceHelper {
-  static activeUsers = new Map()
+  static activeUsers = new Map() // Cache of users in a voice channel
+  /**
+  * This function adds a guild member to the active user cache of this class, if the member is already in the chache, it is removed and the amount of time in milliseconds spent in a voice chat is returned.
+  * @param {Snowflake} userid - The id/snowflake of the user, that joined a voice chat.
+  * @return {?Number} The amount of time in milliseconds spent in a voice chat is returned.
+  */
   static manageActive (userid) {
     if (!this.activeUsers.has(userid)) {
       this.activeUsers.set(userid, Date.now())
@@ -17,7 +25,13 @@ class TrustVoiceHelper {
   }
 }
 
-// Basically just takes an object of class "Role" and attaches some more properties
+/**
+* Basically just takes an object of class "Role" and attaches some more properties
+* @param {Number} threshhold - The amount of karma a user needs to pass, before the role will be removed/added
+* @param {Boolean} manual - Determines, whether or not a role is automatically assingable (false) or not (true).
+* @param {Boolean} inverted - Determines, whether or not a role is assinged on exeeding (false) or subceeding the threshhold (true).
+* @return {Role*} The role, with the additional properties
+*/
 function attachTrustProperties (role, threshhold = 0, manual = false, inverted = false) {
   !(threshhold === null) ? role.threshhold = threshhold : role.threshhold = 0
   !(manual === null) ? role.manual = manual : role.manual = false
@@ -26,10 +40,14 @@ function attachTrustProperties (role, threshhold = 0, manual = false, inverted =
 }
 
 class TrustRolesHelper {
-  static rolesAvailable = []
+  static rolesAvailable = [] // Cache of
+  /**
+   * Manages the TrustRolesHelper cache. Adding roles if not present and deleting roles if it is present in the cache.
+   * @param {Role} role A role, with TrustProperties attached.
+   */
   static async manage (role) {
     if (this.rolesAvailable.includes(role)) {
-      this.rolesAvailable = this.rolesAvailable.filter(item => item !== role)
+      this.rolesAvailable = this.rolesAvailable.filter(item => item.id !== role.id)
       await TrustRoleData.destroy({ where: { role_id: role.id } })
       console.log(`Removed ${role.id} from the roles available for the trust system`)
     } else {
@@ -39,6 +57,11 @@ class TrustRolesHelper {
     }
   }
 
+  /**
+   * Makes it able, to check, if a role is present in the TrustRolesHelper chache, even if no trust-properties are attached.
+   * @param {Role} role The role to check for.
+   * @returns {Boolean} True if the role is in the cache
+   */
   static has (role) {
     const rolesAvailableSnowflakes = []
     this.rolesAvailable.forEach(item => {

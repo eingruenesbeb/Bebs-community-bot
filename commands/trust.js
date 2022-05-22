@@ -18,7 +18,7 @@ module.exports = {
         .addBooleanOption(option =>
           option
             .setName('enabled')
-            .setDescription('Wether or not the trust system is active for this server. (Default: false)')
+            .setDescription('Whether or not the trust system is active for this server. (Default: false)')
         )
         .addNumberOption(option =>
           option
@@ -123,13 +123,34 @@ module.exports = {
             .setDescription('When true, the role is assigned on subceeding a threshhold. (def.: false)')
         )
     ),
-
+  /**
+  * Let's users configure and view user and server settings for the Trust-System.
+  * @summary The available sub-commands are: server, usertoggle, show, edit and role.
+  * - server: Lets a user modify the settings for the server, he/she/they is/are in. If no additional arguments are given by the user, this command only shows the current settings.
+  * - usertoggle: Allows the system to be toggled on or of on a per user basis. (Default: true)
+  * - show: Lets users view their or other guild member's trust level. If no additional arguments are given, this command shows the issuer's trust level.
+  * - edit: Lets guild moderators edit a user's trust level, by either adding a given value or setting it to it.
+  * - role: A command to setup, edit or view or delete a role from the roles automatically managed by the system. If no additional optional arguments are given and the role is already managed by the Trust-System,
+  * the user will be prompted to either view or delete the role.
+  * @param {CommandInteraction} interaction - Contains information about the command issued and the means to respond appropiatly.
+  */
   async execute (interaction) {
-    const blockedUsers = ['962154925255708683']
-    if (blockedUsers.includes(interaction.user.id)) return
+    // Block bots from using this command:
+    if (interaction.user.bot) return
 
     try {
       if (interaction.options.getSubcommand() === 'server') {
+        /*
+        Necessary user permissions: Manage guild
+        Options:
+          - enabled (optional): Whether or not the Trust-System is active in the server. (Default is false);
+          - message-karma (optional): The amount of karma, that a user recieves for sending a text message anywhere in the server. (Default is 1);
+          - voice-minute-karma (optional): The amount of karma a user recieves for being in a voice channel for a minute. (Default is 5);
+          - message-deleted-karma (optional): The amount of karma a user recieves, when one of his/her/their messages gets deleted by a server moderator. (Default is -2)
+          - time-out-karma (optional): The amount of karma a user recieves, when he/she/they is/are given a time-out times the lenght of the time-out in days rounded down to the next integer. (Default is -25)
+          - kick-karma (optional): The amount of karma someone recieves, when being kicked from the server. (Default is -100)
+          - ban-karma (optional): The amount of karma someone recieves from being banned from the server. (Default is -1000)
+        */
         if (!interaction.memberPermissions.any(Permissions.FLAGS.MANAGE_GUILD)) return interaction.reply({ content: '⛔ You need the "Manage Server" permission to do this!', ephemeral: true })
         await interaction.deferReply()
         let guildTrust = await TrustGuildData.findOne({ where: { guildid: interaction.guildId } })
@@ -141,6 +162,7 @@ module.exports = {
         const serverKarmaTo = interaction.options.getNumber('time-out-karma')
         const serverKarmaKick = interaction.options.getNumber('kick-karma')
         const serverKarmaBan = interaction.options.getNumber('ban-karma')
+        // If all variables are null, the database entry is not modified
         if ([serverEnabled, serverKarmaMsg, serverKarmaVCMin, serverKarmaDel, serverKarmaTo, serverKarmaKick, serverKarmaDel].some(item => item !== null)) {
           await TrustGuildData.update(
             {
@@ -158,6 +180,7 @@ module.exports = {
           editedServer = true
         }
         let serverCmdResponse = ''
+        // Send out a non ephemeral response, if something was changed.
         if (editedServer) {
           serverCmdResponse = `✅ Successfully edited server settings for the Trust-System. The new settings are:\nEnabled: ${!!guildTrust.guild_enabled}\nKarma per message: ${guildTrust.karma_message}
 Karma per minute in a voice channel: ${guildTrust.karma_vcminute}\nKarma per message deleted by a moderator: ${guildTrust.karma_message_del}\nKarma per day in time-out: ${guildTrust.karma_time_out}
@@ -176,8 +199,14 @@ Karma per ban: ${guildTrust.karma_ban}`,
       }
 
       if (interaction.options.getSubcommand() === 'usertoggle') {
+        /*
+        Necessary user permissions: Manage guild
+        Options:
+          - target: The guild member this command should change the "user_enabled" value.
+        */
         if (!interaction.memberPermissions.any(Permissions.FLAGS.MANAGE_GUILD)) return interaction.reply({ content: '⛔ You need the "Manage Server" permission to do this!', ephemeral: true })
         const target = interaction.options.getMember('target', true)
+        // If the target isn't found in the database, create an entry for it with the opposite of the default for "user_enabled".
         const [guildUser, created] = await TrustUserData.findOrCreate({
           where: { guild_user_id: interaction.guildId + '|' + target.id },
           defaults: {
@@ -207,6 +236,10 @@ Karma per ban: ${guildTrust.karma_ban}`,
       }
 
       if (interaction.options.getSubcommand() === 'show') {
+        /*
+        Options:
+          - target (optional): The target guild member. If omitted, the target will be set to the command issuer.
+        */
         let target = interaction.member
         if (interaction.options.getMember('target') !== null) {
           target = interaction.options.getMember('target')
@@ -228,8 +261,13 @@ Karma per ban: ${guildTrust.karma_ban}`,
       }
 
       if (interaction.options.getSubcommand() === 'edit') {
+        /*
+        Necessary user permissions: Moderate Members
+        Options:
+          - target: The target guild member
+        */
         await interaction.deferReply()
-        if (!interaction.memberPermissions.any(Permissions.FLAGS.MODERATE_MEMBERS)) return await interaction.editReply('⛔ You need the "Moderate members" permission to do this!')
+        if (!interaction.memberPermissions.any(Permissions.FLAGS.MODERATE_MEMBERS)) return interaction.editReply('⛔ You need the "Moderate members" permission to do this!')
         const target = interaction.options.getMember('target', true)
         const operation = interaction.options.getString('operation', true)
         const amount = interaction.options.getNumber('amount', true)
@@ -243,24 +281,32 @@ Karma per ban: ${guildTrust.karma_ban}`,
           }
         })
         if (created) {
-          console.log(`Added ${guildUser} to the trust database.`)
+          return console.log(`Added ${guildUser} to the trust database.`)
         }
 
         switch (operation) {
           case 'set':
             await TrustUserData.update({ karma: amount }, { where: { guild_user_id: interaction.guildId + '|' + target.id } })
             console.log(`The karma for ${target.user.tag} in ${interaction.guild.name} is now ${amount}. Reason: Karma modified by "${interaction.user.tag}".`)
-            TrustRolesHelper.apply(target, amount)
+            TrustRolesHelper.apply(target, amount) // Apply/remove roles, that might be applicable now.
             return await interaction.editReply(`✅ Successfully set ${target.user.tag}'s karma to ${amount}.`)
           case 'modify':
             await TrustUserData.update({ karma: guildUser.karma + amount }, { where: { guild_user_id: interaction.guildId + '|' + target.id } })
             console.log(`The karma for ${target.user.tag} in ${interaction.guild.name} is now ${guildUser.karma + amount}. Reason: Karma modified by "${interaction.user.tag}".`)
-            TrustRolesHelper.apply(target, guildUser.karma + amount)
+            TrustRolesHelper.apply(target, guildUser.karma + amount) // Apply/remove roles, that might be applicable now.
             return await interaction.editReply(`✅ Successfully modified ${target.user.tag}'s karma. It's now at ${guildUser.karma + amount}.`)
         }
       }
 
       if (interaction.options.getSubcommand() === 'role') {
+        /*
+        Necessary user permissions: Manage Guild (create, edit, delete), None (view)
+        Options:
+          - role-selection: The role in question
+          - threshhold (optional): Set, if this property should be changed. Controls the amount of karma, at which a user is given the/revoked of the role.
+          - manual (optional): Set, if this property should be changed. Controls whether or not the role is given to the user manually.
+          - inverted (optional): Set, if this property should be changed. Controls whether or not the karma of a user having this role should be over (false) or below (true) the threshhold set.
+        */
         await interaction.reply({ content: '⏱️ Managing trust roles...', ephemeral: true })
         const roleIn = interaction.options.getRole('role-selection', true)
         let threshholdIn = interaction.options.getNumber('karma-threshhold')
@@ -268,7 +314,9 @@ Karma per ban: ${guildTrust.karma_ban}`,
         let invertedIn = interaction.options.getBoolean('inverted')
         let roleOut = TrustRolesHelper.retrieve(roleIn)
         if ([threshholdIn, manualIn, invertedIn].some(item => item !== null) || !TrustRolesHelper.has(roleIn)) {
+          // Create or edit, when no optional options are given.
           if (!interaction.memberPermissions.any(Permissions.FLAGS.MANAGE_GUILD)) return await interaction.editReply('⛔ You need the "Manage Server" permission to do this!')
+          // Ensure, that, if the role is already managed by the Trust-System, only properties, that are explicitly given, are overwritten.
           if (roleOut) {
             threshholdIn !== null ? {} : threshholdIn = roleOut.threshhold
             manualIn !== null ? {} : manualIn = roleOut.manual
