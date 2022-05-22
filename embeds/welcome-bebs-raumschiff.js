@@ -1,5 +1,6 @@
 // at the top of your file
 const { MessageEmbed } = require('discord.js');
+const { client } = require('../main.js')
 
 // inside a command, event listener, etc.
 const welcomeEmbed = new MessageEmbed()
@@ -11,4 +12,9 @@ const welcomeEmbed = new MessageEmbed()
 	)
 	.setTimestamp();
 
-console.log(welcomeEmbed);
+const channel_ = client.channels.cache.get('961622988741050450')
+
+module.exports = {
+	channel: channel_,
+	embed: welcomeEmbed
+}  

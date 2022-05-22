@@ -1,0 +1,6 @@
+{
+    "token": "[Paste your bot's token here!]",
+
+    "clientId": "[Paste your applications id here!]",
+    "guildId": "[Paste the guild, you want to register the commands in here!]"
+}
