@@ -1,8 +1,8 @@
 # Discord Community Bot
 
 ## About:
-This repository houses the files for the (as the name might suggest) Discord Community Bot of (mainly) the server called "Beb's Raumschiff".
-When you read this, that probably means, that it's decided that the code for this bot should public. In that case, feel free to fork or clone and modify and redistribute any files here. (It might also be the case, that access was given to you, while this was a private repo. In that case, please refrain from doing, what I just wrote.)
+This repository houses the files for the (as the name might suggest) Discord Community Bot of (mainly) a server called "Beb's Raumschiff".
+When you read this, that probably means, that it's decided that the code for this bot should be public. In that case, feel free to fork or clone and modify and redistribute any files here. (It might also be the case, that access was given to you, while this was a private repo. In that case, please refrain from doing, what I just wrote.)
 The features of this bot are quite specific, so you might want to edit a few things around here and there. 
 
 ## Dependencies:
@@ -27,10 +27,10 @@ These are the packages you actually have to download. If you want a full list of
 
 ## Installation/Usage Guide:
 - In order for the Bot to function properly, the following steps are necessary:
-    1. *Recommended:*  Install "node version manager" (nvm). To do this please check out its GitHub-Repo
-    2. Install node.js. To do this follow the guide on this [nodejs-homepage] website, or the next steps in the guide for nvm.
+    1. *Recommended:*  Install "node version manager" (nvm). To do this please check out its [GitHub-Repo](https://github.com/nvm-sh/nvm "GitHub-Repo")
+    2. Install node.js. To do this follow the guide on the  [nodejs-homepage](https://nodejs.org/en/ "nodejs-homepage") website, or the next steps in the guide for nvm.
     3. Install a package manager for node of your choice.
-    4. Install all necessary dependencies using `[packet manager] install [packet]`
+    4. Install all necessary dependencies using the package manager. (Command for npm: `npm intall [package]`)
     5. Make a new file titled: "config.json", copy-paste the contents of "config-template" in there (you can also just rename the file) and follow the instructions there.
     6. To register the commands, please use navigate to the folder the files for the bot are in in the terminal and use `node deploy-commands.js`
     7. Now you're ready to use the bot. Start it either via the command `node main.js` or better yet, a process manager like pm2.
@@ -48,8 +48,26 @@ These are the packages you actually have to download. If you want a full list of
             - Karma per Time-Out: -25 + duration of time-out in hours rounded down to the nearest integer * (-25)
             - Karma per Kick: -100
             - Karma per Ban: -1000
-        Application-/Guild-commands:
+        - Application-/Guild-commands:
             - `/trust server`: Is a guild command to use for setting server preferences, such as if it is enabled and the different amounts of karma per action. If all options are omitted, just an info about the current settings is sent.
-            - `/trust user`: Used to manually change the amount of karma a user has.
+            - `/trust edit`: Used to manually change the amount of karma a user has.
             - `/trust usertoggle`: Changes, wether or not the trust system applies to a certain user.
             - `/trust role`: Let's you set up or edit a role to be automatically mangaged via the trust system. Check the option descriptions for details. If all options are ommited and the role is already managed by the system, a query will be sent asking the user, if he either wants to view how the role is set up or removed from the system.
+            - `/trust show`: Let's you see, how much karma a user has. If no additional argument is given, the command returns the amount, the issuer has.
+    - Additional Commands: 
+        - `/ping` Returns info, on how long it takes for the bot to respond
+
+## Useful Links:
+- Please check out the wonderful [documentation](https://discord.js.org/#/docs/main/stable/general/welcome "documentation") and [guide](https://discordjs.guide/ "guide") of Discord.js
+- In order to make a discord bot, you have to create one first over at the [Discord's developer portal](https://discord.com/login?redirect_to=%2Fdevelopers%2Fapplications "Discord's developer portal")
+- It might also be useful to check Discord's [documentation](https://discord.com/developers/docs/intro "documentation") to see, what is possible with a bot.
+- Other:
+	- Nodejs: https://nodejs.org/en/
+	- Nvm: https://github.com/nvm-sh/nvm
+	- Npm: https://docs.npmjs.com/
+
+## Last but not least:
+
+So, that's it for now. I hope, this helps you to set up a bot on your own, be it using this code relatively unchaged, heavily modified or even just as an example.
+In any case, happy coding and much success,
+*~ Beb*
