@@ -4,10 +4,21 @@ const { Client, Collection, Intents } = require('discord.js')
 const { token } = require('./config.json')
 require('log-timestamp')
 
-// Create a new client instance
+/**
+ * The main module, that centralizes everything and gets everything rollin'.
+ * 
+ * @module
+ */
+
+/**
+ * @constant client Creates a new client instance.
+ * @type Client
+ */
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_BANS, Intents.FLAGS.GUILD_VOICE_STATES] })
 
-// Saving event files as a collection
+/**
+ * @constant eventFiles Saving event files as a collection
+ */
 const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'))
 
 for (const file of eventFiles) {
@@ -26,6 +37,9 @@ for (const file of eventFiles) {
 // Command handling:
 client.commands = new Collection()
 
+/**
+ * @constant commandFiles Saving command files as a collection
+ */
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'))
 
 for (const file of commandFiles) {
