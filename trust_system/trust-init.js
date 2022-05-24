@@ -7,15 +7,7 @@ const { TrustRolesHelper, attachTrustProperties } = require('./trust-helpers')
  * @module
 */
 
-/**
- * @constant TrustGuildData A sequelize model representing the datatable holding the necessary guild data for the Trust-System.
- * @type Model
-*/
 const TrustGuildData = data.TrustGuildData
-/** 
- * @constant TrustRoleData A sequelize model representing the datatable holding the necessary role data for the Trust-System 
- * @type Model
-*/
 const TrustRoleData = data.TrustRoleData
 
 module.exports = {

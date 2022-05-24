@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Module: trust_system/trust-helpers</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Module: trust_system/trust-helpers</h1>
+
+    
+
+
+
+
+<section>
+
+<header>
+    
+        
+            
+        
+    
+</header>
+
+<article>
+    <div class="container-overview">
+    
+        
+            <div class="description"><p>This module contains classes and methods, to make it easier to handle some stuff, that is related to the Trust-System.</p></div>
+        
+
+        
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="trust_system_trust-helpers.js.html">trust_system/trust-helpers.js</a>, <a href="trust_system_trust-helpers.js.html#line4">line 4</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+    
+    </div>
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Classes</h3>
+
+        <dl>
+            <dt><a href="module-trust_system_trust-helpers-TrustRolesHelper.html">TrustRolesHelper</a></dt>
+            <dd></dd>
+        
+            <dt><a href="module-trust_system_trust-helpers-TrustVoiceHelper.html">TrustVoiceHelper</a></dt>
+            <dd></dd>
+        </dl>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    
+    <h4 class="name" id="~attachTrustProperties"><span class="type-signature">(inner) </span>attachTrustProperties<span class="signature">(threshhold, manual, inverted)</span><span class="type-signature"> &rarr; {Role}</span></h4>
+    
+
+    
+
+
+
+<div class="description">
+    <p>Basically just takes an object of class &quot;Role&quot; and attaches some more properties</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+        <th>Default</th>
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>threshhold</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Number</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    0
+                
+                </td>
+            
+
+            <td class="description last"><p>The amount of karma a user needs to pass, before the role will be removed/added</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>manual</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Determines, whether or not a role is automatically assingable (false) or not (true).</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>inverted</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Boolean</span>
+
+
+            
+            </td>
+
+            
+
+            
+                <td class="default">
+                
+                    false
+                
+                </td>
+            
+
+            <td class="description last"><p>Determines, whether or not a role is assinged on exeeding (false) or subceeding the threshhold (true).</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="trust_system_trust-helpers.js.html">trust_system/trust-helpers.js</a>, <a href="trust_system_trust-helpers.js.html#line41">line 41</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The role, with the additional properties</p>
+</div>
+
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">Role</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+
+
+        
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-commands_ping.html">commands/ping</a></li><li><a href="module-commands_trust.html">commands/trust</a></li><li><a href="module-events_guildBanAdd.html">events/guildBanAdd</a></li><li><a href="module-events_guildMemberRemove.html">events/guildMemberRemove</a></li><li><a href="module-events_guildMemberUpdate.html">events/guildMemberUpdate</a></li><li><a href="module-events_interactionCreate.html">events/interactionCreate</a></li><li><a href="module-events_invalidRequestWarning.html">events/invalidRequestWarning</a></li><li><a href="module-events_messageCreate.html">events/messageCreate</a></li><li><a href="module-events_messageDelete.html">events/messageDelete</a></li><li><a href="module-events_ready.html">events/ready</a></li><li><a href="module-events_voiceStateUpdate.html">events/voiceStateUpdate</a></li><li><a href="module-main.html">main</a></li><li><a href="module-trust_system_trust-helpers.html">trust_system/trust-helpers</a></li><li><a href="module-trust_system_trust-init.html">trust_system/trust-init</a></li><li><a href="module-trust_system_trust-react.html">trust_system/trust-react</a></li></ul><h3>Classes</h3><ul><li><a href="module-trust_system_trust-helpers-TrustRolesHelper.html">TrustRolesHelper</a></li><li><a href="module-trust_system_trust-helpers-TrustVoiceHelper.html">TrustVoiceHelper</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Tue May 24 2022 16:48:10 GMT+0200 (Mitteleuropäische Sommerzeit)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
