@@ -28,7 +28,7 @@ These are the packages you actually have to download. If you want a full list of
 ## Installation/Usage Guide:
 - In order for the Bot to function properly, the following steps are necessary:
     1. *Recommended:*  Install "node version manager" (nvm). To do this please check out its [GitHub-Repo](https://github.com/nvm-sh/nvm "GitHub-Repo")
-    2. Install node.js. To do this follow the guide on the  [nodejs-homepage](https://nodejs.org/en/ "nodejs-homepage") website, or the next steps in the guide for nvm.
+    2. Install node.js. To do this download and install the LTS-Version (v16.15.0 at the time of writing) on the [nodejs-homepage](https://nodejs.org/en/ "nodejs-homepage") website, or the next steps in the guide for nvm.
     3. Install a package manager for node of your choice.
     4. Install all necessary dependencies using the package manager. (Command for npm: `npm ci`)
     5. Make a new file titled: "config.json", copy-paste the contents of "config-template" in there (you can also just rename the file) and follow the instructions there.
