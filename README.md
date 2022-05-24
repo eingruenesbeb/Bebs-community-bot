@@ -24,6 +24,8 @@ These are the packages you actually have to download. If you want a full list of
 - Proper support for creating embedded messages on the fly, with user input possibilities like buttons
 - Ability to play music in voice-channels
 - Switch from guild to application commands
+- Web-Dashboard for easy configuration.
+- Support for multiple languages.
 
 ## Installation/Usage Guide:
 - In order for the Bot to function properly, the following steps are necessary:
