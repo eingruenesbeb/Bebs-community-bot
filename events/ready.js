@@ -2,12 +2,21 @@
 const data = require('../database-setup.js')
 const trust = require('../trust_system/trust-init.js')
 
+/** 
+ * @module 
+ * @description This module handles the reaction to the client being fully operational.
+*/
+
 module.exports = {
+  /** The name of the event to listen to */
   name: 'ready',
+  /** whether or not this event should be reacted to only once */
   once: true,
   /**
   * Function to react, once the bot is successfully logged-in and ready to recieve data.
+  * 
   * @param {Client} client - Contains information about the bots discord client and varios methods.
+  * @async
   */
   async execute (client) {
     await data.sequelize.sync()

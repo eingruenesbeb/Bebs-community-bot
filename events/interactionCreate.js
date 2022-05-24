@@ -1,9 +1,17 @@
+/** 
+ * @module 
+ * @description This module handles the response to there being an action by a user concerning the bot. You can read all about it [here]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#interactions-and-bot-users}.
+*/
+
 module.exports = {
+  /** The name of the event to listen to */
   name: 'interactionCreate',
+  /** whether or not this event should be reacted to only once */
   once: false,
   /**
   * Function to react, when some interaction with interactive elements, that is not a command, happens.
   * @param {Interaction} member - Contains information about the interaction and some means to respond.
+  * @async
   */
   async execute (interaction) {
     if (interaction.member.user.bot) return // Don't react, when the member is a bot

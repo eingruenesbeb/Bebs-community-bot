@@ -4,10 +4,24 @@ const { Permissions, MessageActionRow, MessageButton } = require('discord.js')
 const data = require('../database-setup')
 const { TrustRolesHelper } = require('../trust_system/trust-helpers')
 
+/**
+ * @constant TrustUserData A sequelize model representing the datatable holding the necessary user data for the Trust-System.
+ * @type Model
+*/
 const TrustUserData = data.TrustUserData
+/**
+ * @constant TrustGuildData A sequelize model representing the datatable holding the necessary guild data for the Trust-System.
+ * @type Model
+*/
 const TrustGuildData = data.TrustGuildData
 
+/** 
+ * @module 
+ * @description This module handles the registration of and response to the /trust command.
+*/
+
 module.exports = {
+  /** The data used, to register this command. */
   data: new SlashCommandBuilder()
     .setName('trust')
     .setDescription('The base command for all things Trust system.')
@@ -123,17 +137,22 @@ module.exports = {
             .setDescription('When true, the role is assigned on subceeding a threshhold. (def.: false)')
         )
     ),
+
   /**
-  * Let's users configure and view user and server settings for the Trust-System.
-  * @summary The available sub-commands are: server, usertoggle, show, edit and role.
-  * - server: Lets a user modify the settings for the server, he/she/they is/are in. If no additional arguments are given by the user, this command only shows the current settings.
-  * - usertoggle: Allows the system to be toggled on or of on a per user basis. (Default: true)
-  * - show: Lets users view their or other guild member's trust level. If no additional arguments are given, this command shows the issuer's trust level.
-  * - edit: Lets guild moderators edit a user's trust level, by either adding a given value or setting it to it.
-  * - role: A command to setup, edit or view or delete a role from the roles automatically managed by the system. If no additional optional arguments are given and the role is already managed by the Trust-System,
-  * the user will be prompted to either view or delete the role.
-  * @param {CommandInteraction} interaction - Contains information about the command issued and the means to respond appropiatly.
-  */
+   * The function, that gets executed, when the command "/trust" is issued.
+   * Let's users configure and view user and server settings for the Trust-System.
+   * 
+   * @summary The available sub-commands are: server, usertoggle, show, edit and role.
+   * - server: Lets a user modify the settings for the server, he/she/they is/are in. If no additional arguments are given by the user, this command only shows the current settings.
+   * - usertoggle: Allows the system to be toggled on or of on a per user basis. (Default: true)
+   * - show: Lets users view their or other guild member's trust level. If no additional arguments are given, this command shows the issuer's trust level.
+   * - edit: Lets guild moderators edit a user's trust level, by either adding a given value or setting it to it.
+   * - role: A command to setup, edit or view or delete a role from the roles automatically managed by the system. If no additional optional arguments are given and the role is already managed by the Trust-System,
+   * the user will be prompted to either view or delete the role.
+   * @param {CommandInteraction} interaction - Contains information about the command issued and the means to respond appropiatly.
+   * @function
+   * @async
+   */
   async execute (interaction) {
     // Block bots from using this command:
     if (interaction.user.bot) return

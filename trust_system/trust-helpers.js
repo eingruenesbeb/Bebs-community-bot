@@ -1,11 +1,21 @@
 /* eslint-disable no-unused-expressions */
 const data = require('../database-setup')
 
+/**
+ * @module
+ * @description This module contains classes and methods, to make it easier to handle some stuff, that is related to the Trust-System.
+*/
+
+/** 
+ * @constant TrustRoleData A sequelize model representing the datatable holding the necessary role data for the Trust-System 
+ * @type Model
+*/
 const TrustRoleData = data.TrustRoleData
 
 /**
-* Used to keep track, of who is in a voice channel.
-*/
+ * This class is housing a cache and a method to manage said cache.
+ * @class
+ */
 class TrustVoiceHelper {
   static activeUsers = new Map() // Cache of users in a voice channel
   /**
@@ -30,24 +40,31 @@ class TrustVoiceHelper {
 * @param {Number} threshhold - The amount of karma a user needs to pass, before the role will be removed/added
 * @param {Boolean} manual - Determines, whether or not a role is automatically assingable (false) or not (true).
 * @param {Boolean} inverted - Determines, whether or not a role is assinged on exeeding (false) or subceeding the threshhold (true).
-* @return {Role*} The role, with the additional properties
+* @return {Role} The role, with the additional properties
 */
 function attachTrustProperties (role, threshhold = 0, manual = false, inverted = false) {
   !(threshhold === null) ? role.threshhold = threshhold : role.threshhold = 0
   !(manual === null) ? role.manual = manual : role.manual = false
   !(inverted === null) ? role.inverted = inverted : role.inverted = false
+  // Default values: threshhold -> 0, manual -> false, inverted -> false
   return role
 }
 
+/**
+ * @description This class helps to keep track of and manipulate all the roles currently managed by the Trust-System. 
+ * @class
+ */
 class TrustRolesHelper {
-  static rolesAvailable = [] // Cache of
+  /** Cache of all the roles, that are available to the Trust-System */
+  static rolesAvailable = []
   /**
    * Manages the TrustRolesHelper cache. Adding roles if not present and deleting roles if it is present in the cache.
    * @param {Role} role A role, with TrustProperties attached.
+   * @async
    */
-  static async manage (role) {
+   static async manage (role) {
     if (this.rolesAvailable.includes(role)) {
-      this.rolesAvailable = this.rolesAvailable.filter(item => item.id !== role.id)
+      this.rolesAvailable = this.rolesAvailable.filter(item => item !== role)
       await TrustRoleData.destroy({ where: { role_id: role.id } })
       console.log(`Removed ${role.id} from the roles available for the trust system`)
     } else {
@@ -76,6 +93,7 @@ class TrustRolesHelper {
     * @param {Number} newThreshhold - The new threshhold you want to set.
     * @param {Boolean} newManual - The new manual boolean you want to set.
     * @param {Boolean} newInverted - The new inverted boolean you want to set.
+    * @async
     */
   static async edit (role, newThreshhold, newManual, newInverted) {
     if (!this.has(role)) return this.manage(attachTrustProperties(role, newThreshhold, newManual, newInverted)) // Check if the role is even on the list of roles available.
@@ -92,6 +110,7 @@ class TrustRolesHelper {
   /**
     * Deletes a role from the trust-system.
     * @param {Role} role - The role you whish to delete.
+    * @async
     */
   static async del (role) {
     if (this.has(role)) {
@@ -100,12 +119,24 @@ class TrustRolesHelper {
     } else console.error('You cannot delete a role in the trust-system, if it doesn\'t exist there!')
   }
 
+  /**
+   * Retrieves a given role from the Trust-Roles cache.
+   * 
+   * @param {Role} role A role which should be searched for in the cache and returned by this function. Also works on roles, without the extra properties.
+   * @returns {?Role} The role, passed into this function with all extra properties. null, if not in the cache
+   */
   static retrieve (role) {
     let out = null
     this.has(role) ? out = this.rolesAvailable.filter(item => item.id === role.id)[0] : null
     return out
   }
 
+  /**
+   * Checks, for what roles managed by the Trust-System a guild member should have access to and applies or removes them, depending on the outcome of the evaluation.
+   * 
+   * @param {GuildMember} guildMember The guild member to check on, what Trust-Roles should be applied on it.
+   * @param {*} karma 
+   */
   static async apply (guildMember, karma) {
     // Make a list of all roles that the bot should apply automatically.
     const applicableRoles = this.rolesAvailable.filter(item => (!item.inverted ? item.threshhold < karma : item.threshhold >= karma) && !guildMember.roles.cache.has(item.id) && !item.manual)
