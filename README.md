@@ -34,7 +34,7 @@ These are the packages you actually have to download. If you want a full list of
     2. Install node.js. To do this download and install the LTS-Version (v16.15.0 at the time of writing) on the [nodejs-homepage](https://nodejs.org/en/ "nodejs-homepage") website, or the next steps in the guide for nvm.
     3. Install a package manager for node of your choice.
     4. Install all necessary dependencies using the package manager. (Command for npm: `npm ci`)
-    5. Make a new file titled: "config.json", copy-paste the contents of "config-template" in there (you can also just rename the file) and follow the instructions there.
+    5. Make a new file titled: "config.json", copy-paste the contents of "config-template.json" in there (you can also just rename the file) and follow the instructions there.
     6. To register the commands, please use navigate to the folder the files for the bot are in in the terminal and use `node deploy-commands.js`
     7. Now you're ready to use the bot. Start it either via the command `node main.js` or better yet, a process manager like pm2.
 
