@@ -26,6 +26,7 @@ These are the packages you actually have to download. If you want a full list of
 - Switch from guild to application commands
 - Web-Dashboard for easy configuration.
 - Support for multiple languages.
+- Team planner for server staff
 
 ## Installation/Usage Guide:
 - In order for the Bot to function properly, the following steps are necessary:
@@ -39,7 +40,7 @@ These are the packages you actually have to download. If you want a full list of
 
 - Now let's see, how to use the bot:
     - Database: The database used by the bot is a single sqlite3 file. It is located in "./data/database.sqlite", once you've started the bot at least once. At the moment it is exclusively used for the Trust-System, but can be used for anything you want to store really. You can configure it in ./database-setup.js using the module sequelize. The main upside to this setup is, that it is lightweight and easy to manage. Ideal, for private and small bots. If you have bigger aspirations though or have an external database, it might be a consideration to switch to another system. For that you can still use sequelize, but you might wanna take an extra look at it's [documentation](https://sequelize.org/api/v6/).
-    - To send an embed put it in the ./embeds folder and. You might want to follow the examples in there or better yet follow the documentation on  embeds on [link to the discord.js guide on embeds]. Once you're done with sending all your custom messages and embeds, you should change the file extention to .txt, delete or move the files for them. Otherwise, the bot will send them on each restart.If you want the bot to react to any interactions that might be on your custom messages, take a look at "./events/interactionCreate".
+    - To send an embed put it in the ./embeds folder and. You might want to follow the examples in there or better yet follow the documentation on  embeds on [discord.js guide on embeds](https://discordjs.guide/popular-topics/embeds.html). Once you're done with sending all your custom messages and embeds, you should change the file extention to .txt, delete or move the files for them. Otherwise, the bot will send them on each restart.If you want the bot to react to any interactions that might be on your custom messages, take a look at "./events/interactionCreate".
     - The biggest feature (yet) is be the Trust-System:
         - Synopsis: This is a tool, to award active and well behaved server members with additional permissions and/or roles. And in reverse restrict unruly members.
         - Defaults; The default settings for any server are:

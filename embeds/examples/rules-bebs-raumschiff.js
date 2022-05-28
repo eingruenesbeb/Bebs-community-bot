@@ -1,6 +1,15 @@
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js')
-const { client } = require('../main.js')
+const { client } = require('../../main.js')
 
+/**
+ * @module
+ * @description This module provides an example for an embed. Most parts are inspired by this guide: {@link https://discordjs.guide/popular-topics/embeds.html}
+ */
+
+/**
+ * @constant rulesEmbed This is the embed, that should be sent.
+ * @private
+ */
 const rulesEmbed = new MessageEmbed()
   .setColor('#ff0000')
   .setTitle('Regeln')
@@ -33,6 +42,10 @@ const rulesEmbed = new MessageEmbed()
   )
   .setTimestamp()
 
+/**
+ * @constant testButtons This is a action row, you might wanna add
+ * @private
+ */
 const testButtons = new MessageActionRow()
   .addComponents(
     new MessageButton()
