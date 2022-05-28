@@ -163,7 +163,6 @@ module.exports = {
           - ban-karma (optional): The amount of karma someone recieves from being banned from the server. (Default is -1000)
         */
         if (!interaction.memberPermissions.any(Permissions.FLAGS.MANAGE_GUILD)) return interaction.reply({ content: '⛔ You need the "Manage Server" permission to do this!', ephemeral: true })
-        await interaction.deferReply()
         let guildTrust = await TrustGuildData.findOne({ where: { guildid: interaction.guildId } })
         let editedServer = false
         const serverEnabled = interaction.options.getBoolean('enabled')
@@ -192,11 +191,11 @@ module.exports = {
         }
         let serverCmdResponse = ''
         // Send out a non ephemeral response, if something was changed.
-        if (editedServer) {
+if (editedServer) {
           serverCmdResponse = `✅ Successfully edited server settings for the Trust-System. The new settings are:\nEnabled: ${!!guildTrust.guild_enabled}\nKarma per message: ${guildTrust.karma_message}
 Karma per minute in a voice channel: ${guildTrust.karma_vcminute}\nKarma per message deleted by a moderator: ${guildTrust.karma_message_del}\nKarma per day in time-out: ${guildTrust.karma_time_out}
 Karma per kick: ${guildTrust.karma_kick}\nKarma per ban: ${guildTrust.karma_ban}`
-          interaction.editReply(serverCmdResponse)
+          interaction.reply(serverCmdResponse)
         } else {
           serverCmdResponse = {
             content: `The server settings are:\nEnabled: ${!!guildTrust.guild_enabled}\nKarma per message: ${guildTrust.karma_message}\nKarma per minute in a voice channel: ${guildTrust.karma_vcminute}
@@ -204,8 +203,7 @@ Karma per message deleted by a moderator: ${guildTrust.karma_message_del}\nKarma
 Karma per ban: ${guildTrust.karma_ban}`,
             ephemeral: true
           }
-          interaction.followUp(serverCmdResponse)
-          interaction.deleteReply()
+          interaction.reply(serverCmdResponse)
         }
       }
 
@@ -292,7 +290,7 @@ Karma per ban: ${guildTrust.karma_ban}`,
           }
         })
         if (created) {
-          return console.log(`Added ${guildUser} to the trust database.`)
+          console.log(`Added ${guildUser} to the trust database.`)
         }
 
         switch (operation) {
@@ -337,7 +335,7 @@ Karma per ban: ${guildTrust.karma_ban}`,
           await TrustRolesHelper.edit(roleIn, threshholdIn, manualIn, invertedIn)
           roleOut = TrustRolesHelper.retrieve(roleIn)
           console.log(`Added/edited ${roleOut.id} for use with the trust-system.`)
-          return await interaction.editReply(`✅ Successfully setup ${roleIn.name} for use with the trust system, with parameters: threshhold = ${roleOut.threshhold}, manual = ${roleOut.manual}, inverted = ${roleOut.inverted}.`)
+          return await interaction.followUp(`✅ Successfully setup ${roleIn.name} for use with the trust system, with parameters: threshhold = ${roleOut.threshhold}, manual = ${roleOut.manual}, inverted = ${roleOut.inverted}.`)
         } else {
           // Executes, when the role was found in "TrustRolesHelper.availableRoles" and no input parameters were given.
           console.log('Sending question to view or remove.')

@@ -1,6 +1,6 @@
 {
   "name": "discord-community-bot",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A simple (or complex... idk yet) Discord Bot used for my community server",
   "main": "main.js",
   "scripts": {
