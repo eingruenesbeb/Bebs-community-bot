@@ -61,6 +61,7 @@ These are the packages you actually have to download. If you want a full list of
         - `/ping` Returns info, on how long it takes for the bot to respond
 
 ## Useful Links:
+- For detailed information about the bot view: https://eingruenesbeb.github.io/Bebs-community-bot/
 - Please check out the wonderful [documentation](https://discord.js.org/#/docs/main/stable/general/welcome "documentation") and [guide](https://discordjs.guide/ "guide") of Discord.js. Some code snippets from there are in here too.
 - In order to make a discord bot, you have to create one first over at the [Discord's developer portal](https://discord.com/login?redirect_to=%2Fdevelopers%2Fapplications "Discord's developer portal")
 - It might also be useful to check Discord's [documentation](https://discord.com/developers/docs/intro "documentation") to see, what is possible with a bot.
