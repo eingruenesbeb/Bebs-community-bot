@@ -1,18 +1,17 @@
 // Require Sequelize
 const Sequelize = require('sequelize')
+const { user, password } = require('./config.json')
 
 /**
- * @constant sequelize_ Information about the bot's database
+ * @constant sequelize_ Information about the bot's database. Databases dialects other than sqlite might require additional parameters.
  * @type Sequelize
  * @private
  */
-const sequelize_ = new Sequelize('database', 'user', 'password', {
-  host: 'localhost',
+const sequelize_ = new Sequelize({
   dialect: 'sqlite',
   logging: false,
-  // SQLite only
   storage: './data/database.sqlite'
-})
+});
 
 // Create Trust-datatables:
 /**
