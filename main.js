@@ -14,7 +14,7 @@ require('log-timestamp')
  * @constant client Creates a new client instance.
  * @type Client
  */
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_BANS, Intents.FLAGS.GUILD_VOICE_STATES] })
+const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_BANS, Intents.FLAGS.GUILD_VOICE_STATES], partials: ['MESSAGE'] })
 
 /**
  * @constant eventFiles Saving event files as a collection
@@ -27,7 +27,7 @@ for (const file of eventFiles) {
     client.once(event.name, (...args) => event.execute(...args))
   } else {
     try {
-      client.on(event.name, (...args) => event.execute(...args))
+      client.on(event.name, event.name !== 'messageDelete' ? (...args) => event.execute(...args) : (...args) => event.execute(client, ...args))
     } catch (error) {
       console.error(error)
     }
@@ -66,3 +66,5 @@ client.on('interactionCreate', async interaction => {
 
 // Login to Discord with your client's token
 client.login(token)
+
+module.exports = client

@@ -19,7 +19,7 @@ module.exports = {
   * @async
   */
   async execute (client) {
-    await data.sequelize.sync()
+    await data.sequelize.sync({ force: true })
     trust.trustOnInit(client) // Initializing Trust System
     console.log(`Ready! Logged in as ${client.user.tag}`)
     client.user.setActivity('Sowas wie eine Selbstfindungsphase für Bots...', { type: 'WATCHING' })

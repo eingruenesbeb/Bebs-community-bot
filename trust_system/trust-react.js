@@ -43,10 +43,10 @@ module.exports = {
    * 
    * @param {Message} message The message, that was deleted.
    * @async
-   * @todo Fix Bug, where if the last message deleted was from that user and the user then deletes a few of his messages on his own, he still gets a malus.
   */
   async trustReactMessageDelete (message) {
-    if (!message.guild) return // Check, if the message was even in the guild.
+    // This really feels ductaped together... :S
+    if (!message.author) return console.log('A message was deleted and the karma of a user might need modification, but no author could be identified.'); //  Return, if no author could be identified.
     const guildTrust = await TrustGuildData.findOne({ where: { guildid: message.guildId } })
     if (guildTrust.guild_enabled === 1) {
       const [guildUser, created] = await TrustUserData.findOrCreate({
@@ -60,22 +60,11 @@ module.exports = {
       if (created) {
         console.log(`Added ${guildUser} to the trust database.`)
       }
-      // Check, if the message was deleted, be a mod. If yes, it should be in the Audit-Logs. As the check is almost intantaneos, it should be the first element in the list.
-      const fetchedLogs = await message.guild.fetchAuditLogs({
-        limit: 1,
-        type: 'MESSAGE_DELETE'
-      })
 
-      const deletionLog = fetchedLogs.entries.first()
-
-      if (!deletionLog) return console.log(`A message by ${message.author.tag} was deleted, but no relevant audit logs were found.`)
-
-      const { executor, target } = deletionLog
-
-      if (guildUser.user_enabled === 1 && target.id === message.author.id) {
+      if (guildUser.user_enabled === 1 && message.deletedByMod) {
         await TrustUserData.update({ karma: guildUser.karma + guildTrust.karma_message_del }, { where: { guild_user_id: message.guildId + '|' + message.author.id } })
         TrustRolesHelper.apply(message.member, guildUser.karma + guildTrust.karma_message_del) // Karma was modified therfore it is neccesary to check the roles.
-        console.log(`The karma for ${message.author.id} in ${message.guildId} is now ${guildUser.karma + guildTrust.karma_message_del}. Reason: Message was deleted by "${executor.tag}".`)
+        console.log(`The karma for ${message.author.id} in ${message.guildId} is now ${guildUser.karma + guildTrust.karma_message_del}. Reason: Message was deleted by a moderator.`)
       } else console.log('The message was either deleted by a bot (because, that sadly isn\'t be detectable), or the author itself, therefore the karma will not be modified.')
     }
   },
@@ -109,6 +98,11 @@ module.exports = {
       const kickLog = fetchedLogs.entries.first()
 
       if (!kickLog) return console.log(`${member.user.tag} left the guild, most likely of their own will.`)
+
+      // Fixes a bug, where, when a user leaves a guild, who was the last one to be kicked in it, they gets another malus.
+      const lastChecked = guildTrust.kick_last_checked
+      if (lastChecked === kickLog.id) return console.log(`A user has left the guild and the last user kicked was the one, who left, however it was on their own accord this time.`)
+      TrustGuildData.update({ kick_last_checked: kickLog.id }, { where: { guildid: member.guild.id } })
 
       const { executor, target } = kickLog
 

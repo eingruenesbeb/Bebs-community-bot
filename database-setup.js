@@ -16,6 +16,21 @@ const sequelize_ = new Sequelize('database', 'user', 'password', {
 
 // Create Trust-datatables:
 /**
+ * @constant GeneralGuildData A datatable to store general information about a Guild
+ * @private
+ */
+const GeneralGuildData_ = sequelize_.define('general guild', {
+  guild_id: {
+    type: Sequelize.STRING,
+    unique: true,
+    allowNull: false,
+    primaryKey: true
+  },
+  last_checked_audit_log_deleted_amount: Sequelize.INTEGER,
+  last_checked_audit_log_deleted_id: Sequelize.STRING
+})
+
+/**
  * @constant TrustGuildData_ The datatable for everything that has to do with guilds in the Trust-System.
  * @private
  */
@@ -32,10 +47,14 @@ const TrustGuildData_ = sequelize_.define('trust-system guild', {
   karma_message_del: Sequelize.INTEGER,
   karma_time_out: Sequelize.INTEGER,
   karma_kick: Sequelize.INTEGER,
-  karma_ban: Sequelize.INTEGER
+  karma_ban: Sequelize.INTEGER,
+  kick_last_checked: {
+    type: Sequelize.STRING,
+    unique: true
+  }
 })
 /**
- * @constant TrustGuildData_ The datatable for everything that has to do with users in the Trust-System.
+ * @constant TrustUserData_ The datatable for everything that has to do with users in the Trust-System.
  * @private
  */
 const TrustUserData_ = sequelize_.define('trust-system user', {
@@ -53,7 +72,7 @@ const TrustUserData_ = sequelize_.define('trust-system user', {
   }
 })
 /**
- * @constant TrustGuildData_ The datatable for everything that has to do with roles in the Trust-System.
+ * @constant TrustRoleData_ The datatable for everything that has to do with roles in the Trust-System.
  * @private
  */
 const TrustRoleData_ = sequelize_.define('trust-system roles', {
@@ -82,6 +101,11 @@ const TrustRoleData_ = sequelize_.define('trust-system roles', {
 })
 
 module.exports = {
+  /**
+   * A sequelize model representing the general information useful for the bot.
+   * @type Model
+   */
+  GeneralGuildData: GeneralGuildData_,
   /**
     * A sequelize model representing the datatable holding the necessary user data for the Trust-System.
     * @type Model
