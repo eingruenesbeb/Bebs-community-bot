@@ -2,7 +2,7 @@
 
 ## About:
 This repository houses the files for the (as the name might suggest) Discord Community Bot of (mainly) a server called "Beb's Raumschiff".
-When you read this, that probably means, that it's decided that the code for this bot should be public. In that case, feel free to fork or clone and modify and redistribute any files here. (It might also be the case, that access was given to you, while this was a private repo. In that case, please refrain from doing, what I just wrote.)
+When you read this, that probably means, that it's decided that the code for this bot should be public. In that case, feel free to fork or clone and modify and redistribute any files here.
 The features of this bot are quite specific, so you might want to edit a few things around here and there. 
 
 ## Dependencies:
