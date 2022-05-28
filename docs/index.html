@@ -46,7 +46,7 @@
         <article><h1>Beb's Community Bot</h1>
 <h2>About:</h2>
 <p>This repository houses the files for the (as the name might suggest) Discord Community Bot of (mainly) a server called &quot;Beb's Raumschiff&quot;.
-When you read this, that probably means, that it's decided that the code for this bot should be public. In that case, feel free to fork or clone and modify and redistribute any files here. (It might also be the case, that access was given to you, while this was a private repo. In that case, please refrain from doing, what I just wrote.)
+When you read this, that probably means, that it's decided that the code for this bot should be public. In that case, feel free to fork or clone and modify and redistribute any files here.
 The features of this bot are quite specific, so you might want to edit a few things around here and there.</p>
 <h2>Dependencies:</h2>
 <p>These are the packages you actually have to download. If you want a full list of all dependencies, please take a look at package-lock.json.</p>
@@ -72,6 +72,7 @@ The features of this bot are quite specific, so you might want to edit a few thi
 <li>Switch from guild to application commands</li>
 <li>Web-Dashboard for easy configuration.</li>
 <li>Support for multiple languages.</li>
+<li>Team planner for server staff</li>
 </ul>
 <h2>Installation/Usage Guide:</h2>
 <ul>
@@ -91,7 +92,7 @@ The features of this bot are quite specific, so you might want to edit a few thi
 <p>Now let's see, how to use the bot:</p>
 <ul>
 <li>Database: The database used by the bot is a single sqlite3 file. It is located in &quot;./data/database.sqlite&quot;, once you've started the bot at least once. At the moment it is exclusively used for the Trust-System, but can be used for anything you want to store really. You can configure it in ./database-setup.js using the module sequelize. The main upside to this setup is, that it is lightweight and easy to manage. Ideal, for private and small bots. If you have bigger aspirations though or have an external database, it might be a consideration to switch to another system. For that you can still use sequelize, but you might wanna take an extra look at it's <a href="https://sequelize.org/api/v6/">documentation</a>.</li>
-<li>To send an embed put it in the ./embeds folder and. You might want to follow the examples in there or better yet follow the documentation on  embeds on [link to the discord.js guide on embeds]. Once you're done with sending all your custom messages and embeds, you should change the file extention to .txt, delete or move the files for them. Otherwise, the bot will send them on each restart.If you want the bot to react to any interactions that might be on your custom messages, take a look at &quot;./events/interactionCreate&quot;.</li>
+<li>To send an embed put it in the ./embeds folder and. You might want to follow the examples in there or better yet follow the documentation on  embeds on <a href="https://discordjs.guide/popular-topics/embeds.html">discord.js guide on embeds</a>. Once you're done with sending all your custom messages and embeds, you should change the file extention to .txt, delete or move the files for them. Otherwise, the bot will send them on each restart.If you want the bot to react to any interactions that might be on your custom messages, take a look at &quot;./events/interactionCreate&quot;.</li>
 <li>The biggest feature (yet) is be the Trust-System:
 <ul>
 <li>Synopsis: This is a tool, to award active and well behaved server members with additional permissions and/or roles. And in reverse restrict unruly members.</li>
@@ -152,13 +153,13 @@ In any case, happy coding and much success.
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-commands_ping.html">commands/ping</a></li><li><a href="module-commands_trust.html">commands/trust</a></li><li><a href="module-events_guildBanAdd.html">events/guildBanAdd</a></li><li><a href="module-events_guildMemberRemove.html">events/guildMemberRemove</a></li><li><a href="module-events_guildMemberUpdate.html">events/guildMemberUpdate</a></li><li><a href="module-events_interactionCreate.html">events/interactionCreate</a></li><li><a href="module-events_invalidRequestWarning.html">events/invalidRequestWarning</a></li><li><a href="module-events_messageCreate.html">events/messageCreate</a></li><li><a href="module-events_messageDelete.html">events/messageDelete</a></li><li><a href="module-events_ready.html">events/ready</a></li><li><a href="module-events_voiceStateUpdate.html">events/voiceStateUpdate</a></li><li><a href="module-main.html">main</a></li><li><a href="module-trust_system_trust-helpers.html">trust_system/trust-helpers</a></li><li><a href="module-trust_system_trust-init.html">trust_system/trust-init</a></li><li><a href="module-trust_system_trust-react.html">trust_system/trust-react</a></li></ul><h3>Classes</h3><ul><li><a href="module-trust_system_trust-helpers-TrustRolesHelper.html">TrustRolesHelper</a></li><li><a href="module-trust_system_trust-helpers-TrustVoiceHelper.html">TrustVoiceHelper</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-commands_ping.html">commands/ping</a></li><li><a href="module-commands_trust.html">commands/trust</a></li><li><a href="module-embeds_examples_rules-bebs-raumschiff.html">embeds/examples/rules-bebs-raumschiff</a></li><li><a href="module-events_guildBanAdd.html">events/guildBanAdd</a></li><li><a href="module-events_guildMemberRemove.html">events/guildMemberRemove</a></li><li><a href="module-events_guildMemberUpdate.html">events/guildMemberUpdate</a></li><li><a href="module-events_interactionCreate.html">events/interactionCreate</a></li><li><a href="module-events_invalidRequestWarning.html">events/invalidRequestWarning</a></li><li><a href="module-events_messageCreate.html">events/messageCreate</a></li><li><a href="module-events_messageDelete.html">events/messageDelete</a></li><li><a href="module-events_ready.html">events/ready</a></li><li><a href="module-events_voiceStateUpdate.html">events/voiceStateUpdate</a></li><li><a href="module-main.html">main</a></li><li><a href="module-trust_system_trust-helpers.html">trust_system/trust-helpers</a></li><li><a href="module-trust_system_trust-init.html">trust_system/trust-init</a></li><li><a href="module-trust_system_trust-react.html">trust_system/trust-react</a></li></ul><h3>Classes</h3><ul><li><a href="module-trust_system_trust-helpers-TrustRolesHelper.html">TrustRolesHelper</a></li><li><a href="module-trust_system_trust-helpers-TrustVoiceHelper.html">TrustVoiceHelper</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Tue May 24 2022 19:52:18 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Sat May 28 2022 19:40:06 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>

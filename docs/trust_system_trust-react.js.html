@@ -71,10 +71,10 @@ module.exports = {
    * 
    * @param {Message} message The message, that was deleted.
    * @async
-   * @todo Fix Bug, where if the last message deleted was from that user and the user then deletes a few of his messages on his own, he still gets a malus.
   */
   async trustReactMessageDelete (message) {
-    if (!message.guild) return // Check, if the message was even in the guild.
+    // This really feels ductaped together... :S
+    if (!message.author) return console.log('A message was deleted and the karma of a user might need modification, but no author could be identified.'); //  Return, if no author could be identified.
     const guildTrust = await TrustGuildData.findOne({ where: { guildid: message.guildId } })
     if (guildTrust.guild_enabled === 1) {
       const [guildUser, created] = await TrustUserData.findOrCreate({
@@ -88,22 +88,11 @@ module.exports = {
       if (created) {
         console.log(`Added ${guildUser} to the trust database.`)
       }
-      // Check, if the message was deleted, be a mod. If yes, it should be in the Audit-Logs. As the check is almost intantaneos, it should be the first element in the list.
-      const fetchedLogs = await message.guild.fetchAuditLogs({
-        limit: 1,
-        type: 'MESSAGE_DELETE'
-      })
 
-      const deletionLog = fetchedLogs.entries.first()
-
-      if (!deletionLog) return console.log(`A message by ${message.author.tag} was deleted, but no relevant audit logs were found.`)
-
-      const { executor, target } = deletionLog
-
-      if (guildUser.user_enabled === 1 &amp;&amp; target.id === message.author.id) {
+      if (guildUser.user_enabled === 1 &amp;&amp; message.deletedByMod) {
         await TrustUserData.update({ karma: guildUser.karma + guildTrust.karma_message_del }, { where: { guild_user_id: message.guildId + '|' + message.author.id } })
         TrustRolesHelper.apply(message.member, guildUser.karma + guildTrust.karma_message_del) // Karma was modified therfore it is neccesary to check the roles.
-        console.log(`The karma for ${message.author.id} in ${message.guildId} is now ${guildUser.karma + guildTrust.karma_message_del}. Reason: Message was deleted by "${executor.tag}".`)
+        console.log(`The karma for ${message.author.id} in ${message.guildId} is now ${guildUser.karma + guildTrust.karma_message_del}. Reason: Message was deleted by a moderator.`)
       } else console.log('The message was either deleted by a bot (because, that sadly isn\'t be detectable), or the author itself, therefore the karma will not be modified.')
     }
   },
@@ -137,6 +126,11 @@ module.exports = {
       const kickLog = fetchedLogs.entries.first()
 
       if (!kickLog) return console.log(`${member.user.tag} left the guild, most likely of their own will.`)
+
+      // Fixes a bug, where, when a user leaves a guild, who was the last one to be kicked in it, they gets another malus.
+      const lastChecked = guildTrust.kick_last_checked
+      if (lastChecked === kickLog.id) return console.log(`A user has left the guild and the last user kicked was the one, who left, however it was on their own accord this time.`)
+      TrustGuildData.update({ kick_last_checked: kickLog.id }, { where: { guildid: member.guild.id } })
 
       const { executor, target } = kickLog
 
@@ -251,13 +245,13 @@ module.exports = {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-commands_ping.html">commands/ping</a></li><li><a href="module-commands_trust.html">commands/trust</a></li><li><a href="module-events_guildBanAdd.html">events/guildBanAdd</a></li><li><a href="module-events_guildMemberRemove.html">events/guildMemberRemove</a></li><li><a href="module-events_guildMemberUpdate.html">events/guildMemberUpdate</a></li><li><a href="module-events_interactionCreate.html">events/interactionCreate</a></li><li><a href="module-events_invalidRequestWarning.html">events/invalidRequestWarning</a></li><li><a href="module-events_messageCreate.html">events/messageCreate</a></li><li><a href="module-events_messageDelete.html">events/messageDelete</a></li><li><a href="module-events_ready.html">events/ready</a></li><li><a href="module-events_voiceStateUpdate.html">events/voiceStateUpdate</a></li><li><a href="module-main.html">main</a></li><li><a href="module-trust_system_trust-helpers.html">trust_system/trust-helpers</a></li><li><a href="module-trust_system_trust-init.html">trust_system/trust-init</a></li><li><a href="module-trust_system_trust-react.html">trust_system/trust-react</a></li></ul><h3>Classes</h3><ul><li><a href="module-trust_system_trust-helpers-TrustRolesHelper.html">TrustRolesHelper</a></li><li><a href="module-trust_system_trust-helpers-TrustVoiceHelper.html">TrustVoiceHelper</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-commands_ping.html">commands/ping</a></li><li><a href="module-commands_trust.html">commands/trust</a></li><li><a href="module-embeds_examples_rules-bebs-raumschiff.html">embeds/examples/rules-bebs-raumschiff</a></li><li><a href="module-events_guildBanAdd.html">events/guildBanAdd</a></li><li><a href="module-events_guildMemberRemove.html">events/guildMemberRemove</a></li><li><a href="module-events_guildMemberUpdate.html">events/guildMemberUpdate</a></li><li><a href="module-events_interactionCreate.html">events/interactionCreate</a></li><li><a href="module-events_invalidRequestWarning.html">events/invalidRequestWarning</a></li><li><a href="module-events_messageCreate.html">events/messageCreate</a></li><li><a href="module-events_messageDelete.html">events/messageDelete</a></li><li><a href="module-events_ready.html">events/ready</a></li><li><a href="module-events_voiceStateUpdate.html">events/voiceStateUpdate</a></li><li><a href="module-main.html">main</a></li><li><a href="module-trust_system_trust-helpers.html">trust_system/trust-helpers</a></li><li><a href="module-trust_system_trust-init.html">trust_system/trust-init</a></li><li><a href="module-trust_system_trust-react.html">trust_system/trust-react</a></li></ul><h3>Classes</h3><ul><li><a href="module-trust_system_trust-helpers-TrustRolesHelper.html">TrustRolesHelper</a></li><li><a href="module-trust_system_trust-helpers-TrustVoiceHelper.html">TrustVoiceHelper</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Tue May 24 2022 19:52:18 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Sat May 28 2022 19:40:06 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>

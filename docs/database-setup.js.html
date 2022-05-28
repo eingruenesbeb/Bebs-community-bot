@@ -44,6 +44,21 @@ const sequelize_ = new Sequelize('database', 'user', 'password', {
 
 // Create Trust-datatables:
 /**
+ * @constant GeneralGuildData A datatable to store general information about a Guild
+ * @private
+ */
+const GeneralGuildData_ = sequelize_.define('general guild', {
+  guild_id: {
+    type: Sequelize.STRING,
+    unique: true,
+    allowNull: false,
+    primaryKey: true
+  },
+  last_checked_audit_log_deleted_amount: Sequelize.INTEGER,
+  last_checked_audit_log_deleted_id: Sequelize.STRING
+})
+
+/**
  * @constant TrustGuildData_ The datatable for everything that has to do with guilds in the Trust-System.
  * @private
  */
@@ -60,10 +75,14 @@ const TrustGuildData_ = sequelize_.define('trust-system guild', {
   karma_message_del: Sequelize.INTEGER,
   karma_time_out: Sequelize.INTEGER,
   karma_kick: Sequelize.INTEGER,
-  karma_ban: Sequelize.INTEGER
+  karma_ban: Sequelize.INTEGER,
+  kick_last_checked: {
+    type: Sequelize.STRING,
+    unique: true
+  }
 })
 /**
- * @constant TrustGuildData_ The datatable for everything that has to do with users in the Trust-System.
+ * @constant TrustUserData_ The datatable for everything that has to do with users in the Trust-System.
  * @private
  */
 const TrustUserData_ = sequelize_.define('trust-system user', {
@@ -81,7 +100,7 @@ const TrustUserData_ = sequelize_.define('trust-system user', {
   }
 })
 /**
- * @constant TrustGuildData_ The datatable for everything that has to do with roles in the Trust-System.
+ * @constant TrustRoleData_ The datatable for everything that has to do with roles in the Trust-System.
  * @private
  */
 const TrustRoleData_ = sequelize_.define('trust-system roles', {
@@ -110,6 +129,11 @@ const TrustRoleData_ = sequelize_.define('trust-system roles', {
 })
 
 module.exports = {
+  /**
+   * A sequelize model representing the general information useful for the bot.
+   * @type Model
+   */
+  GeneralGuildData: GeneralGuildData_,
   /**
     * A sequelize model representing the datatable holding the necessary user data for the Trust-System.
     * @type Model
@@ -141,13 +165,13 @@ module.exports = {
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-commands_ping.html">commands/ping</a></li><li><a href="module-commands_trust.html">commands/trust</a></li><li><a href="module-events_guildBanAdd.html">events/guildBanAdd</a></li><li><a href="module-events_guildMemberRemove.html">events/guildMemberRemove</a></li><li><a href="module-events_guildMemberUpdate.html">events/guildMemberUpdate</a></li><li><a href="module-events_interactionCreate.html">events/interactionCreate</a></li><li><a href="module-events_invalidRequestWarning.html">events/invalidRequestWarning</a></li><li><a href="module-events_messageCreate.html">events/messageCreate</a></li><li><a href="module-events_messageDelete.html">events/messageDelete</a></li><li><a href="module-events_ready.html">events/ready</a></li><li><a href="module-events_voiceStateUpdate.html">events/voiceStateUpdate</a></li><li><a href="module-main.html">main</a></li><li><a href="module-trust_system_trust-helpers.html">trust_system/trust-helpers</a></li><li><a href="module-trust_system_trust-init.html">trust_system/trust-init</a></li><li><a href="module-trust_system_trust-react.html">trust_system/trust-react</a></li></ul><h3>Classes</h3><ul><li><a href="module-trust_system_trust-helpers-TrustRolesHelper.html">TrustRolesHelper</a></li><li><a href="module-trust_system_trust-helpers-TrustVoiceHelper.html">TrustVoiceHelper</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-commands_ping.html">commands/ping</a></li><li><a href="module-commands_trust.html">commands/trust</a></li><li><a href="module-embeds_examples_rules-bebs-raumschiff.html">embeds/examples/rules-bebs-raumschiff</a></li><li><a href="module-events_guildBanAdd.html">events/guildBanAdd</a></li><li><a href="module-events_guildMemberRemove.html">events/guildMemberRemove</a></li><li><a href="module-events_guildMemberUpdate.html">events/guildMemberUpdate</a></li><li><a href="module-events_interactionCreate.html">events/interactionCreate</a></li><li><a href="module-events_invalidRequestWarning.html">events/invalidRequestWarning</a></li><li><a href="module-events_messageCreate.html">events/messageCreate</a></li><li><a href="module-events_messageDelete.html">events/messageDelete</a></li><li><a href="module-events_ready.html">events/ready</a></li><li><a href="module-events_voiceStateUpdate.html">events/voiceStateUpdate</a></li><li><a href="module-main.html">main</a></li><li><a href="module-trust_system_trust-helpers.html">trust_system/trust-helpers</a></li><li><a href="module-trust_system_trust-init.html">trust_system/trust-init</a></li><li><a href="module-trust_system_trust-react.html">trust_system/trust-react</a></li></ul><h3>Classes</h3><ul><li><a href="module-trust_system_trust-helpers-TrustRolesHelper.html">TrustRolesHelper</a></li><li><a href="module-trust_system_trust-helpers-TrustVoiceHelper.html">TrustVoiceHelper</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Tue May 24 2022 19:52:18 GMT+0200 (Mitteleuropäische Sommerzeit)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Sat May 28 2022 19:40:06 GMT+0200 (Mitteleuropäische Sommerzeit)
 </footer>
 
 <script> prettyPrint(); </script>
