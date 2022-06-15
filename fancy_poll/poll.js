@@ -1,4 +1,5 @@
-const canvas = require('@napi-rs/canvas')
+const Canvas = require('@napi-rs/canvas')
+const fs = require('fs')
 
 /**
  * @class
@@ -64,12 +65,38 @@ class Poll {
   }
 }
 
+/**
+ * @class
+ * @description This class represents the settings for the look of a poll
+ * @property {Number[]} dimensions The [x, y] dimensions of the poll image in pixel.
+ * @property {String | null} background The path to the background image. Is null, if no argument is provided, resulting in a transparent background.
+ * @property {Map<('bottom', 'left', 'right', 'top'),Number>} imgPadding By how many pixel the poll image should be padded by on each side.
+ * @property {function(PollOption[]):PollOption[]} optOrder A function, that sorts the Array of poll options.
+ * @property {Map<statistic, Map<option, value>>} stats The statistics to show on the poll currently available: totalVotes, dateCreated, timeOut
+ * @property {Map<option, value>} titleStyle How the title should be formatted.
+ * @property {Map<option, value>} messageStyle How the title should be formatted.
+ * @property {Map<option, value>} head How the poll header should look like.
+ * @property {Map<option, value>} footer How the footer of the poll sould look like.
+ */
 class PollStyle {
+  /**
+   * @constructor
+   * @description This class represents the settings for the look of a poll
+   * @param {Number[]} dimensions The [x, y] dimensions of the poll image in pixel.
+   * @param {String | null} background The path to the background image. Is null, if no argument is provided, resulting in a transparent background.
+   * @param {Map<('bottom', 'left', 'right', 'top'),Number>} imgPadding By how many pixel the poll image should be padded by on each side.
+   * @param {function(PollOption[]):PollOption[]} optOrder A function, that sorts the Array of poll options.
+   * @param {Map<statistic, Map<option, value>>} stats The statistics to show on the poll currently available: totalVotes, dateCreated, timeOut
+   * @param {Map<option, value>} titleStyle How the title should be formatted.
+   * @param {Map<option, value>} messageStyle How the title should be formatted.
+   * @param {Map<option, value>} head How the poll header should look like.
+   * @param {Map<option, value>} footer How the footer of the poll sould look like.
+   */
   constructor (
     dimensions, background = null, imgPadding = { bottom: 25, left: 10, right: 10, top: 25 }, optOrder = options => { return options },
     stats = { totalVotes: { alignment: { horizontal: 0, vertical: 0 }, color: '#00c1bb', font: '12px sans-serif' } }, titleStyle = { alignment: { horizontal: 0, vertical: 0 }, fontStyle: 'sans-serif', fontDefSize: 32, color: '#00c1bb' },
-    messageStyle = { alignment: { horizontal: 0, vertical: 0 }, fontStyle: 'sans-serif', fontDefSize: 24, color: '#00c1bb' }, head = { padding: { bottom: 24, left: 0, right: 0, top: 0 }, background: null, includes: ['title', 'question'] },
-    footer = { padding: { bottom: 24, left: 0, right: 0, top: 0 }, background: null, includes: ['title', 'question'] }) {
+    messageStyle = { alignment: { horizontal: 0, vertical: 0 }, fontStyle: 'sans-serif', fontDefSize: 24, color: '#00c1bb' }, head = { padding: { bottom: 24, left: 0, right: 0, top: 0 }, background: null },
+    footer = { padding: { bottom: 24, left: 0, right: 0, top: 0 }, background: null }) {
     this.background = background
     this.dimensions = dimensions
     this.imgPadding = imgPadding
@@ -82,16 +109,55 @@ class PollStyle {
   }
 }
 
+/**
+ * @class
+ * @description This class represents a poll option.
+ * @property {String} name The name of the option
+ * @property {Map<element, value>} style Defines, how the option should look like.
+ * @property {Map<User, amount>} votes Stores information on who voted for this option how often.
+ */
 class PollOption {
+  /**
+   * @class
+   * @description This class represents a poll option.
+   * @param {String} name The name of the option
+   * @param {PollOptionStyle} style Defines, how the option should look like.
+   * @param {Map<User, amount>} votes Stores information on who voted for this option how often.
+   */
   constructor (name, style, votes) {
+    this.name = name
+    this.style = style
+    this.votes = votes
+  }
 
+  /**
+   * This method should be called, whenever aa user has voted for the option.
+   * @param {User} user The user, who voted.
+   */
+  vote (user) {
+    this.votes.has(user.id) ? this.votes.set(user.id, this.votes.get(user.id) + 1) : this.votes.user.id = 1
+  }
+
+  buildImage () {
+    const canvas = Canvas.createCanvas(this.style.dimensions[0], this.style.dimensions[1])
+    const context = canvas.getContext("2d")
+    let background = null
+    if (this.style.background) {
+      try {
+        const bgrSource = fs.readFileSync(this.style.background)
+        const bgr = new Canvas.Image()
+        bgr.src = bgrSource
+
+        context.drawImage(bgr, this.style.padding.left, this.style.padding.bottom, this.style.padding.right)
+      }
+    }
   }
 }
 
 class PollOptionStyle {
   constructor (
-    dimensions = [460, 69], padding = { bottom: 5, left: 0, right: 0, top: 5 }, background = null, loadOrder = ['description', 'bar', 'ticker'], optDesc = { alignment: 'left', onBar: false },
-    bar = { background: ['#5865F2'], edge: ['#000000'], alignment: 'left' }, ticker = { color: '#FFFFFF', style: 'percentage', onBar: true }) {
+    dimensions = [460, 69], padding = { bottom: 5, left: 0, right: 0, top: 5 }, background = null, loadOrder = ['description', 'bar', 'ticker'], optDesc = { alignment: { horizontal: 0, vertical: 0 }, onBar: false },
+    bar = { background: ['#5865F2'], edge: ['#000000'], alignment: { horizontal: 0, vertical: 0 } }, ticker = { color: '#FFFFFF', style: 'percentage', onBar: true }) {
     this.dimensions = dimensions
     this.padding = padding
     this.background = background
