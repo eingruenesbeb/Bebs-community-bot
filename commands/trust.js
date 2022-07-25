@@ -4,8 +4,8 @@ const { Permissions, MessageActionRow, MessageButton } = require('discord.js')
 const data = require('../database-setup')
 const { TrustRolesHelper } = require('../trust_system/trust-helpers')
 
-/** 
- * @module 
+/**
+ * @module
  * @description This module handles the registration of and response to the /trust command.
 */
 
@@ -133,7 +133,7 @@ module.exports = {
   /**
    * The function, that gets executed, when the command "/trust" is issued.
    * Let's users configure and view user and server settings for the Trust-System.
-   * 
+   *
    * @summary The available sub-commands are: server, usertoggle, show, edit and role.
    * - server: Lets a user modify the settings for the server, he/she/they is/are in. If no additional arguments are given by the user, this command only shows the current settings.
    * - usertoggle: Allows the system to be toggled on or of on a per user basis. (Default: true)
@@ -191,7 +191,7 @@ module.exports = {
         }
         let serverCmdResponse = ''
         // Send out a non ephemeral response, if something was changed.
-if (editedServer) {
+        if (editedServer) {
           serverCmdResponse = `✅ Successfully edited server settings for the Trust-System. The new settings are:\nEnabled: ${!!guildTrust.guild_enabled}\nKarma per message: ${guildTrust.karma_message}
 Karma per minute in a voice channel: ${guildTrust.karma_vcminute}\nKarma per message deleted by a moderator: ${guildTrust.karma_message_del}\nKarma per day in time-out: ${guildTrust.karma_time_out}
 Karma per kick: ${guildTrust.karma_kick}\nKarma per ban: ${guildTrust.karma_ban}`

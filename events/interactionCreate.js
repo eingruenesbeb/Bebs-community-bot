@@ -1,5 +1,5 @@
-/** 
- * @module 
+/**
+ * @module
  * @description This module handles the response to there being an action by a user concerning the bot. You can read all about it [here]{@link https://discord.com/developers/docs/interactions/receiving-and-responding#interactions-and-bot-users}.
 */
 

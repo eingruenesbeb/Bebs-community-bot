@@ -1,5 +1,5 @@
-/** 
- * @module 
+/**
+ * @module
  * @description This module handles the situation, when the client sends to many invalid requests to the discord API, to avoid a ban for too many in a short amount of time.
  * @todo Add functionality, as warnings are currently just logged!
 */

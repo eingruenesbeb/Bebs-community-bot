@@ -3,8 +3,8 @@ const data = require('../database-setup')
 
 const GeneralGuildData = data.GeneralGuildData
 
-/** 
- * @module 
+/**
+ * @module
  * @description This module handles the response to, when a message was deleted in a guild.
 */
 
@@ -32,15 +32,15 @@ module.exports = {
     if (delLogEntry) {
       // Use data in the general data for guilds to determine, if the entry was checked before and therefore doesn't apply to the message in question.
       const guildData = await GeneralGuildData.findOrCreate({ where: { guild_id: message.guildId }, defaults: { guild_id: message.guildId } })
-      const lastChecked = {id: guildData[0].last_checked_audit_log_deleted_id, amount: guildData[0].last_checked_audit_log_deleted_amount}
-      const toCheck = {id: delLogEntry.id, amount: delLogEntry.extra.count}
+      const lastChecked = { id: guildData[0].last_checked_audit_log_deleted_id, amount: guildData[0].last_checked_audit_log_deleted_amount }
+      const toCheck = { id: delLogEntry.id, amount: delLogEntry.extra.count }
       if (toCheck.id !== lastChecked.id && toCheck.amount !== lastChecked.amount) {
         // That means, that the deletion was indeed recorded in the audit-log, that the author is the target and the message was deleted by a moderator.
         message.author = delLogEntry.target
         message.member = await message.guild.members.fetch(message.author)
         message.deletedByMod = true
       }
-      await GeneralGuildData.update({ last_checked_audit_log_deleted_id: delLogEntry.id, last_checked_audit_log_deleted_amount: delLogEntry.extra.count }, 
+      await GeneralGuildData.update({ last_checked_audit_log_deleted_id: delLogEntry.id, last_checked_audit_log_deleted_amount: delLogEntry.extra.count },
         { where: { guild_id: message.guildId } })
     }
 

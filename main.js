@@ -6,7 +6,7 @@ require('log-timestamp')
 
 /**
  * The main module, that centralizes everything and gets everything rollin'.
- * 
+ *
  * @module
  */
 

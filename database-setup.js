@@ -1,5 +1,6 @@
 // Require Sequelize
 const Sequelize = require('sequelize')
+// eslint-disable-next-line no-unused-vars
 const { user, password } = require('./config.json')
 
 /**
@@ -11,7 +12,7 @@ const sequelize_ = new Sequelize({
   dialect: 'sqlite',
   logging: false,
   storage: './data/database.sqlite'
-});
+})
 
 // Create Trust-datatables:
 /**
@@ -115,8 +116,8 @@ module.exports = {
     * @type Model
     */
   TrustGuildData: TrustGuildData_,
-  /** 
-    * A sequelize model representing the datatable holding the necessary role data for the Trust-System 
+  /**
+    * A sequelize model representing the datatable holding the necessary role data for the Trust-System
     * @type Model
     */
   TrustRoleData: TrustRoleData_,

@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders')
 
-/** 
- * @module 
+/**
+ * @module
  * @description This module handles the registration of and response to the /ping command.
 */
 
@@ -12,7 +12,7 @@ module.exports = {
     .setDescription('Answeres Pong and tells the user, how long that took'),
   /**
    * Executed, when "ping" shlash command was issued. Answers with the amount of time needed for a response.
-   * 
+   *
    * @param {CommandInteraction} interaction - Contains information about the command issued and the means to respond appropiatly.
    * @async
    */

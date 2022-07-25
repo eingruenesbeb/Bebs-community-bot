@@ -2,8 +2,8 @@
 const data = require('../database-setup.js')
 const trust = require('../trust_system/trust-init.js')
 
-/** 
- * @module 
+/**
+ * @module
  * @description This module handles the reaction to the client being fully operational.
 */
 
@@ -14,7 +14,7 @@ module.exports = {
   once: true,
   /**
   * Function to react, once the bot is successfully logged-in and ready to recieve data.
-  * 
+  *
   * @param {Client} client - Contains information about the bots discord client and varios methods.
   * @async
   */
