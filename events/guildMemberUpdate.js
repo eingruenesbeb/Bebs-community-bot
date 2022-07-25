@@ -1,7 +1,7 @@
 const trust = require('../trust_system/trust-react.js')
 
-/** 
- * @module 
+/**
+ * @module
  * @description This module handles the response to a member being updated in a guild.
 */
 

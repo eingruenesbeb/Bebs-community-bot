@@ -6,7 +6,7 @@ const { clientId, guildId, token } = require('./config.json')
 const commands = []
 const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'))
 
-const rest = new REST({ version: '9' }).setToken(token)
+const rest = new REST({ version: '10' }).setToken(token)
 
 for (const file of commandFiles) {
   const command = require(`./commands/${file}`)

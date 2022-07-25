@@ -1,6 +1,6 @@
 // Require the necessary discord.js classes
 const fs = require('node:fs')
-const { Client, Collection, Intents } = require('discord.js')
+const { Client, GatewayIntentBits, Partials, Collection, InteractionType } = require('discord.js')
 const { token } = require('./config.json')
 require('log-timestamp')
 
@@ -14,7 +14,7 @@ require('log-timestamp')
  * @constant client Creates a new client instance.
  * @type Client
  */
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_BANS, Intents.FLAGS.GUILD_VOICE_STATES], partials: ['MESSAGE'] })
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildBans, GatewayIntentBits.GuildVoiceStates], partials: [Partials.Message] })
 
 /**
  * @constant eventFiles Saving event files as a collection
@@ -50,7 +50,7 @@ for (const file of commandFiles) {
 }
 
 client.on('interactionCreate', async interaction => {
-  if (!interaction.isCommand()) return
+  if (!(interaction.type === InteractionType.ApplicationCommand)) return
 
   const command = client.commands.get(interaction.commandName)
 

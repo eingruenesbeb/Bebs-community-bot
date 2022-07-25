@@ -3,7 +3,7 @@ const { TrustRolesHelper, attachTrustProperties } = require('./trust-helpers')
 
 /**
  * Used to initialize the Trust-System on boot, by adding and reading data to and from the database.
- * 
+ *
  * @module
 */
 
@@ -15,7 +15,7 @@ module.exports = {
    * This function:
    * - Adds all the guilds the bot joined while not online into the database
    * - Loads all the Trust-Roles from the database to the corresponding cache.
-   * 
+   *
    * @param {Client} client The client, the bot is logged in with.
    * @async
    */

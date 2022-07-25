@@ -47,11 +47,11 @@ function attachTrustProperties (role, threshhold = 0, manual = false, inverted =
 }
 
 /**
- * @description This class helps to keep track of and manipulate all the roles currently managed by the Trust-System. 
+ * @description This class helps to keep track of and manipulate all the roles currently managed by the Trust-System.
  * @class
  */
 class TrustRolesHelper {
-  /** 
+  /**
    * Cache of all the roles, that are available to the Trust-System
    * @static
    */
@@ -61,7 +61,7 @@ class TrustRolesHelper {
    * @param {Role} role A role, with TrustProperties attached.
    * @async
    */
-   static async manage (role) {
+  static async manage (role) {
     if (this.rolesAvailable.includes(role)) {
       this.rolesAvailable = this.rolesAvailable.filter(item => item !== role)
       await TrustRoleData.destroy({ where: { role_id: role.id } })
@@ -120,7 +120,7 @@ class TrustRolesHelper {
 
   /**
    * Retrieves a given role from the Trust-Roles cache.
-   * 
+   *
    * @param {Role} role A role which should be searched for in the cache and returned by this function. Also works on roles, without the extra properties.
    * @returns {?Role} The role, passed into this function with all extra properties. null, if not in the cache
    */
@@ -132,7 +132,7 @@ class TrustRolesHelper {
 
   /**
    * Checks, for what roles managed by the Trust-System a guild member should have access to and applies or removes them, depending on the outcome of the evaluation.
-   * 
+   *
    * @param {GuildMember} guildMember The guild member to check on, what Trust-Roles should be applied on it.
    * @param {Number} karma The amount of karma the guild member has.
    */

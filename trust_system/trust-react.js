@@ -12,7 +12,7 @@ const TrustGuildData = data.TrustGuildData
 module.exports = {
   /**
    * Mangages the Trust-System, in the event, that a user sent a message.
-   * 
+   *
    * @param {Message} message The message, that the user sent.
    * @async
   */
@@ -40,13 +40,13 @@ module.exports = {
   },
   /**
    * Mangages the Trust-System, in the event, that a message from a user was deleted.
-   * 
+   *
    * @param {Message} message The message, that was deleted.
    * @async
   */
   async trustReactMessageDelete (message) {
     // This really feels ductaped together... :S
-    if (!message.author) return console.log('A message was deleted and the karma of a user might need modification, but no author could be identified.'); //  Return, if no author could be identified.
+    if (!message.author) return console.log('A message was deleted and the karma of a user might need modification, but no author could be identified.') //  Return, if no author could be identified.
     const guildTrust = await TrustGuildData.findOne({ where: { guildid: message.guildId } })
     if (guildTrust.guild_enabled === 1) {
       const [guildUser, created] = await TrustUserData.findOrCreate({
@@ -70,7 +70,7 @@ module.exports = {
   },
   /**
    * Mangages the Trust-System, in the event, that a user was kicked from a guild.
-   * 
+   *
    * @param {GuildMember} member The member, that was kicked.
    * @async
    * @todo Fix Bug, where if the user was the last one kicked and then leaves a second time on his own accord, he gets a malus non the less.
@@ -101,7 +101,7 @@ module.exports = {
 
       // Fixes a bug, where, when a user leaves a guild, who was the last one to be kicked in it, they gets another malus.
       const lastChecked = guildTrust.kick_last_checked
-      if (lastChecked === kickLog.id) return console.log(`A user has left the guild and the last user kicked was the one, who left, however it was on their own accord this time.`)
+      if (lastChecked === kickLog.id) return console.log('A user has left the guild and the last user kicked was the one, who left, however it was on their own accord this time.')
       TrustGuildData.update({ kick_last_checked: kickLog.id }, { where: { guildid: member.guild.id } })
 
       const { executor, target } = kickLog
@@ -115,7 +115,7 @@ module.exports = {
   },
   /**
    * Mangages the Trust-System, in the event, that a user has recieved a time-out in a guild.
-   * 
+   *
    * @param {GuildMember} newMember The new state of the member.
    * @param {GuildMember} oldMember The old state of the member.
    * @async
@@ -139,7 +139,7 @@ module.exports = {
       const timeOutLenght = Math.floor((newMember.communicationDisabledUntilTimestamp - oldMember.communicationDisabledUntilTimestamp) / 8640000) // Time-Out lenght in days (rounded down to the next integer)
 
       if (guildUser.user_enabled === 1) {
-        await TrustUserData.update({ karma: guildUser.karma + guildTrust.karma_time_out + guildTrust.karma_time_out * timeOutLenght}, { where: { guild_user_id: newMember.guild.id + '|' + newMember.id } })
+        await TrustUserData.update({ karma: guildUser.karma + guildTrust.karma_time_out + guildTrust.karma_time_out * timeOutLenght }, { where: { guild_user_id: newMember.guild.id + '|' + newMember.id } })
         TrustRolesHelper.apply(newMember, guildUser.karma + guildTrust.karma_time_out + guildTrust.karma_time_out * timeOutLenght) // Karma was modified therfore it is neccesary to check the roles.
         console.log(`The karma for ${newMember.user.tag} in ${newMember.guild.name} is now ${guildUser.karma + guildTrust.karma_time_out + guildTrust.karma_time_out * timeOutLenght}. Reason: User was given a time-out for ${timeOutLenght} days.`)
       }
@@ -147,7 +147,7 @@ module.exports = {
   },
   /**
    * Mangages the Trust-System, in the event, that a user was banned from a guild.
-   * 
+   *
    * @param {GuildBan} ban Information about the ban (along with some methods).
    * @async
   */
@@ -175,7 +175,7 @@ module.exports = {
   },
   /**
    * Mangages the Trust-System, in the event, that a user's voice settings were changed in a guild.
-   * 
+   *
    * @param {VoiceState} newState The new state of the member's VoiceState.
    * @param {VoiceState} oldState The old state of the member's VoiceState.
    * @async

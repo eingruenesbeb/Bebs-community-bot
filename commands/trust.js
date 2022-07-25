@@ -92,8 +92,8 @@ module.exports = {
           option
             .setName('operation')
             .setDescription('"set" will let you set the amount, "modify" will let you modify the current amout of karma.')
-            .addChoice('set', 'set')
-            .addChoice('modify', 'modify')
+            .addChoices('set', 'set')
+            .addChoices('modify', 'modify')
             .setRequired(true)
         )
         .addNumberOption(option =>
