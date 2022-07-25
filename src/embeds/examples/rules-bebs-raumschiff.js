@@ -1,4 +1,4 @@
-const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js')
+const { MessageEmbed, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js')
 const { client } = require('../../main.js')
 
 /**
@@ -46,12 +46,12 @@ const rulesEmbed = new MessageEmbed()
  * @constant testButtons This is a action row, you might wanna add
  * @private
  */
-const testButtons = new MessageActionRow()
+const testButtons = new ActionRowBuilder()
   .addComponents(
-    new MessageButton()
+    new ButtonBuilder()
       .setCustomId('Regeln akzeptiert')
       .setLabel('Ich akzeptiere')
-      .setStyle('SUCCESS')
+      .setStyle(ButtonStyle.Success)
   )
 
 const channel_ = client.channels.cache.get('961622988741050450')

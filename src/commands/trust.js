@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-expressions */
 const { SlashCommandBuilder } = require('@discordjs/builders')
-const { Permissions, MessageActionRow, MessageButton } = require('discord.js')
+const { PermissionsBitField, ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType } = require('discord.js')
 const data = require('../database-setup')
 const { TrustRolesHelper } = require('../trust_system/trust-helpers')
 
@@ -92,8 +92,10 @@ module.exports = {
           option
             .setName('operation')
             .setDescription('"set" will let you set the amount, "modify" will let you modify the current amout of karma.')
-            .addChoices('set', 'set')
-            .addChoices('modify', 'modify')
+            .addChoices(
+              { name: 'set', value: 'set' },
+              { name: 'modify', value: 'modify' }
+            )
             .setRequired(true)
         )
         .addNumberOption(option =>
@@ -162,7 +164,7 @@ module.exports = {
           - kick-karma (optional): The amount of karma someone recieves, when being kicked from the server. (Default is -100)
           - ban-karma (optional): The amount of karma someone recieves from being banned from the server. (Default is -1000)
         */
-        if (!interaction.memberPermissions.any(Permissions.FLAGS.MANAGE_GUILD)) return interaction.reply({ content: '⛔ You need the "Manage Server" permission to do this!', ephemeral: true })
+        if (!interaction.memberPermissions.any(PermissionsBitField.Flags.ManageGuild)) return interaction.reply({ content: '⛔ You need the "Manage Server" permission to do this!', ephemeral: true })
         let guildTrust = await TrustGuildData.findOne({ where: { guildid: interaction.guildId } })
         let editedServer = false
         const serverEnabled = interaction.options.getBoolean('enabled')
@@ -213,7 +215,7 @@ Karma per ban: ${guildTrust.karma_ban}`,
         Options:
           - target: The guild member this command should change the "user_enabled" value.
         */
-        if (!interaction.memberPermissions.any(Permissions.FLAGS.MANAGE_GUILD)) return interaction.reply({ content: '⛔ You need the "Manage Server" permission to do this!', ephemeral: true })
+        if (!interaction.memberPermissions.any(PermissionsBitField.Flags.ManageGuild)) return interaction.reply({ content: '⛔ You need the "Manage Server" permission to do this!', ephemeral: true })
         const target = interaction.options.getMember('target', true)
         // If the target isn't found in the database, create an entry for it with the opposite of the default for "user_enabled".
         const [guildUser, created] = await TrustUserData.findOrCreate({
@@ -276,7 +278,7 @@ Karma per ban: ${guildTrust.karma_ban}`,
           - target: The target guild member
         */
         await interaction.deferReply()
-        if (!interaction.memberPermissions.any(Permissions.FLAGS.MODERATE_MEMBERS)) return interaction.editReply('⛔ You need the "Moderate members" permission to do this!')
+        if (!interaction.memberPermissions.any(PermissionsBitField.Flags.ModerateMembers)) return interaction.editReply('⛔ You need the "Moderate members" permission to do this!')
         const target = interaction.options.getMember('target', true)
         const operation = interaction.options.getString('operation', true)
         const amount = interaction.options.getNumber('amount', true)
@@ -324,7 +326,7 @@ Karma per ban: ${guildTrust.karma_ban}`,
         let roleOut = TrustRolesHelper.retrieve(roleIn)
         if ([threshholdIn, manualIn, invertedIn].some(item => item !== null) || !TrustRolesHelper.has(roleIn)) {
           // Create or edit, when no optional options are given.
-          if (!interaction.memberPermissions.any(Permissions.FLAGS.MANAGE_GUILD)) return await interaction.editReply('⛔ You need the "Manage Server" permission to do this!')
+          if (!interaction.memberPermissions.any(PermissionsBitField.Flags.ManageGuild)) return await interaction.editReply('⛔ You need the "Manage Server" permission to do this!')
           // Ensure, that, if the role is already managed by the Trust-System, only properties, that are explicitly given, are overwritten.
           if (roleOut) {
             threshholdIn !== null ? {} : threshholdIn = roleOut.threshhold
@@ -339,19 +341,19 @@ Karma per ban: ${guildTrust.karma_ban}`,
         } else {
           // Executes, when the role was found in "TrustRolesHelper.availableRoles" and no input parameters were given.
           console.log('Sending question to view or remove.')
-          const buttons = new MessageActionRow()
+          const buttons = new ActionRowBuilder()
             .addComponents(
-              [new MessageButton()
+              [new ButtonBuilder()
                 .setCustomId('view')
                 .setLabel('View')
-                .setStyle('PRIMARY'),
-              new MessageButton()
+                .setStyle(ButtonStyle.Primary),
+              new ButtonBuilder()
                 .setCustomId('delete')
                 .setLabel('Remove')
-                .setStyle('DANGER')]
+                .setStyle(ButtonStyle.Danger)]
             )
           const prompt = await interaction.followUp({ content: '❔ What do you want to do?', components: [buttons] })
-          const collector = prompt.createMessageComponentCollector({ componentType: 'BUTTON', time: 60000 }) // Collector waiting for user input...
+          const collector = prompt.createMessageComponentCollector({ componentType: ComponentType.Button, time: 60000 }) // Collector waiting for user input...
           collector.on('collect', async i => {
             if (interaction.user.id === i.user.id) {
               // Executes only when the user who pressed the button is the one, who issued the command.
@@ -359,7 +361,7 @@ Karma per ban: ${guildTrust.karma_ban}`,
               if (i.customId === 'view') {
                 return await i.reply({ content: `The parameters for ${roleIn.name} are: threshhold = ${roleOut.threshhold}, manual = ${roleOut.manual}, inverted = ${roleOut.inverted}.`, ephemeral: true })
               } else if (i.customId === 'delete') {
-                if (!interaction.memberPermissions.any(Permissions.FLAGS.MANAGE_GUILD)) return await interaction.editReply('⛔ You need the "Manage Server" permission to do this!')
+                if (!interaction.memberPermissions.any(PermissionsBitField.Flags.ManageGuild)) return await interaction.editReply('⛔ You need the "Manage Server" permission to do this!')
                 TrustRolesHelper.del(roleIn)
                 console.log(`Removed role ${roleIn.id} from the trust-system.`)
                 return await i.reply(`✅ The role ${roleIn.name} was successfully removed from the trust system.`)

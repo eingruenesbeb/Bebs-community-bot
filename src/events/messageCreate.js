@@ -17,7 +17,7 @@ module.exports = {
   */
   async execute (message) {
     if (message.author.bot) return // Don't react, when the user is a bot
-    console.log(`Message detected from ${message.author.username} on ${message.guild} in channel ${message.channel}, with content: "${message.content}"`)
+    console.log(`Message detected from ${message.author.username} on ${message.guild} in channel ${message.channel}`)
     trust.trustReactMessagePosted(message) // Apply Trust-System
   }
 }

@@ -1,7 +1,7 @@
 // Require Sequelize
 const Sequelize = require('sequelize')
 // eslint-disable-next-line no-unused-vars
-const { user, password } = require('./config.json')
+const { user, password } = require('../config.json')
 
 /**
  * @constant sequelize_ Information about the bot's database. Databases dialects other than sqlite might require additional parameters.
@@ -11,7 +11,7 @@ const { user, password } = require('./config.json')
 const sequelize_ = new Sequelize({
   dialect: 'sqlite',
   logging: false,
-  storage: './data/database.sqlite'
+  storage: '../data/database.sqlite'
 })
 
 // Create Trust-datatables:
@@ -49,6 +49,10 @@ const TrustGuildData_ = sequelize_.define('trust-system guild', {
   karma_kick: Sequelize.INTEGER,
   karma_ban: Sequelize.INTEGER,
   kick_last_checked: {
+    type: Sequelize.STRING,
+    unique: true
+  },
+  member_update_last_checked: {
     type: Sequelize.STRING,
     unique: true
   }

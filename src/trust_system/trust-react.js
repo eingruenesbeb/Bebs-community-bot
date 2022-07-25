@@ -1,3 +1,4 @@
+const { AuditLogEvent } = require('discord.js')
 const data = require('../database-setup')
 const { TrustVoiceHelper, TrustRolesHelper } = require('./trust-helpers')
 
@@ -92,7 +93,7 @@ module.exports = {
       // Check, if target was kicked.
       const fetchedLogs = await member.guild.fetchAuditLogs({
         limit: 1,
-        type: 'MEMBER_KICK'
+        type: AuditLogEvent.MemberKick
       })
 
       const kickLog = fetchedLogs.entries.first()
@@ -120,9 +121,12 @@ module.exports = {
    * @param {GuildMember} oldMember The old state of the member.
    * @async
   */
-  async trustReactTimeout (newMember, oldMember) {
-    if (oldMember.communicationDisabledUntilTimestamp === newMember.communicationDisabledUntilTimestamp) return // Return, when no time-out was given.
+  async trustReactTimeout (newMember) {
     const guildTrust = await TrustGuildData.findOne({ where: { guildid: newMember.guild.id } })
+    const relevantAuditLog = await newMember.guild.fetchAuditLogs({ limit: 1, type: AuditLogEvent.MemberUpdate })
+    const relevantEntry = relevantAuditLog.entries.first()
+    if (relevantEntry.changes[0].key !== 'communication_disabled_until' || relevantEntry.changes[0].new === undefined) return
+    const timeOutLenght = Math.floor((Date.parse(relevantEntry.changes[0].new) - Date.now()) / 86400000)
     if (guildTrust.guild_enabled === 1) {
       const [guildUser, created] = await TrustUserData.findOrCreate({
         where: { guild_user_id: newMember.guild.id + '|' + newMember.id },
@@ -135,8 +139,6 @@ module.exports = {
       if (created) {
         console.log(`Added ${guildUser} to the trust database.`)
       }
-
-      const timeOutLenght = Math.floor((newMember.communicationDisabledUntilTimestamp - oldMember.communicationDisabledUntilTimestamp) / 8640000) // Time-Out lenght in days (rounded down to the next integer)
 
       if (guildUser.user_enabled === 1) {
         await TrustUserData.update({ karma: guildUser.karma + guildTrust.karma_time_out + guildTrust.karma_time_out * timeOutLenght }, { where: { guild_user_id: newMember.guild.id + '|' + newMember.id } })

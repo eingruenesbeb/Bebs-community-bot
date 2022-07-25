@@ -1,5 +1,6 @@
 const trust = require('../trust_system/trust-react.js')
 const data = require('../database-setup')
+const { AuditLogEvent } = require('discord.js')
 
 const GeneralGuildData = data.GeneralGuildData
 
@@ -25,7 +26,7 @@ module.exports = {
     const guild = await client.guilds.fetch(message.guildId)
     // This next part is a way to possibly get the author of a deleted message, that wasn't cached, via the Audit-Log:
     const delLog = await guild.fetchAuditLogs({
-      type: 'MESSAGE_DELETE',
+      type: AuditLogEvent.MessageDelete,
       limit: 1
     })
     const delLogEntry = delLog.entries.first()
@@ -34,7 +35,7 @@ module.exports = {
       const guildData = await GeneralGuildData.findOrCreate({ where: { guild_id: message.guildId }, defaults: { guild_id: message.guildId } })
       const lastChecked = { id: guildData[0].last_checked_audit_log_deleted_id, amount: guildData[0].last_checked_audit_log_deleted_amount }
       const toCheck = { id: delLogEntry.id, amount: delLogEntry.extra.count }
-      if (toCheck.id !== lastChecked.id && toCheck.amount !== lastChecked.amount) {
+      if ((toCheck.id !== lastChecked.id) || ((toCheck.id === lastChecked.id) && (toCheck.amount !== lastChecked.amount))) {
         // That means, that the deletion was indeed recorded in the audit-log, that the author is the target and the message was deleted by a moderator.
         message.author = delLogEntry.target
         message.member = await message.guild.members.fetch(message.author)

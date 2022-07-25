@@ -18,7 +18,8 @@ module.exports = {
   */
   async execute (newMember, oldMember) {
     console.log('Event guildMemberUpdate fired.')
+    newMember = await newMember.fetch(true)
     if (newMember.user.bot) return // Don't react, when the member is a bot
-    trust.trustReactTimeout(newMember, oldMember) // Apply Trust-System
+    trust.trustReactTimeout(newMember) // Apply Trust-System
   }
 }

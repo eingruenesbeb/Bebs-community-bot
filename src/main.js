@@ -1,7 +1,7 @@
 // Require the necessary discord.js classes
 const fs = require('node:fs')
 const { Client, GatewayIntentBits, Partials, Collection, InteractionType } = require('discord.js')
-const { token } = require('./config.json')
+const { token } = require('../config.json')
 require('log-timestamp')
 
 /**
@@ -14,7 +14,7 @@ require('log-timestamp')
  * @constant client Creates a new client instance.
  * @type Client
  */
-const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildBans, GatewayIntentBits.GuildVoiceStates], partials: [Partials.Message] })
+const client = new Client({ intents: [GatewayIntentBits.Guilds, GatewayIntentBits.GuildMessages, GatewayIntentBits.GuildMembers, GatewayIntentBits.GuildBans, GatewayIntentBits.GuildVoiceStates], partials: [Partials.Message, Partials.GuildMember] })
 
 /**
  * @constant eventFiles Saving event files as a collection

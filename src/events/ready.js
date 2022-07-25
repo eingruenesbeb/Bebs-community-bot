@@ -1,4 +1,5 @@
 // const fs = require('node:fs') // Uncomment, when you want to send special one-time messages.
+const { ActivityFlags } = require('discord.js')
 const data = require('../database-setup.js')
 const trust = require('../trust_system/trust-init.js')
 
@@ -22,7 +23,7 @@ module.exports = {
     await data.sequelize.sync()
     trust.trustOnInit(client) // Initializing Trust System
     console.log(`Ready! Logged in as ${client.user.tag}`)
-    client.user.setActivity('Sowas wie eine Selbstfindungsphase für Bots...', { type: 'WATCHING' })
+    client.user.setActivity('Sowas wie eine Selbstfindungsphase für Bots...', { type: ActivityFlags.Spectate })
 
     // Uncomment the next block, to send ALL embeds in '../embeds'
     /*

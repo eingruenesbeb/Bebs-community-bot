@@ -140,16 +140,40 @@ class TrustRolesHelper {
     // Make a list of all roles that the bot should apply automatically.
     const applicableRoles = this.rolesAvailable.filter(item => (!item.inverted ? item.threshhold < karma : item.threshhold >= karma) && !guildMember.roles.cache.has(item.id) && !item.manual)
     const applicableRolesSnowflakes = []
+    let highestApplicableRole = null
     applicableRoles.forEach(item => {
       applicableRolesSnowflakes.push(item.id)
+      if (highestApplicableRole === null) highestApplicableRole = item
+      if (highestApplicableRole.comparePositionTo(item) > 0) highestApplicableRole = item
     })
 
     // Make a list of all roles that the bot should remove automatically.
     const removableRoles = this.rolesAvailable.filter(item => (!item.inverted ? item.threshhold > karma : item.threshhold <= karma) && guildMember.roles.cache.has(item.id))
     const removableRolesSnowflakes = []
+    let highestRemovableRole = null
     removableRoles.forEach(item => {
       removableRolesSnowflakes.push(item.id)
+      if (highestRemovableRole === null) highestRemovableRole = item
+      if (highestRemovableRole.comparePositionTo(item) > 0) highestRemovableRole = item
     })
+
+    // Check the bot's role position:
+    const botUser = await guildMember.guild.members.fetchMe()
+    const botHighestRole = botUser.roles.highest
+    if (highestApplicableRole) {
+      const compareApplicable = botHighestRole.comparePositionTo(highestApplicableRole)
+      if (compareApplicable < 0) {
+        console.warn(`Tried to add a role, the bot had no permission to do with so. GuildId: ${guildMember.guild.id}`)
+        return
+      }
+    }
+    if (highestRemovableRole) {
+      const compareRemovable = botHighestRole.comparePositionTo(highestRemovableRole)
+      if (compareRemovable < 0) {
+        console.warn(`Tried to remove a role, the bot had no permission to do with so. GuildId: ${guildMember.guild.id}`)
+        return
+      }
+    }
 
     // Apply desired changes:
     await guildMember.roles.remove(removableRolesSnowflakes, 'Trust-System') // Absolutly has to to be awaited!
