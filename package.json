@@ -15,7 +15,7 @@
     "discord.js": "^13.6.0",
     "log-timestamp": "^0.3.0",
     "sequelize": "^6.29.0",
-    "sqlite3": "^5.0.5"
+    "sqlite3": "^5.1.5"
   },
   "devDependencies": {
     "eslint": "^8.16.0",
